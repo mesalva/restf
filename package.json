@@ -1,0 +1,21 @@
+{
+  "name": "restf",
+  "version": "0.0.10",
+  "description": "A RESTFull api blue print",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Andre Antunes Vieira",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "knex": "^0.20.1"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify-es": "^2.0.0"
+  }
+}

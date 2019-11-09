@@ -1,0 +1,1 @@
+const path=require("path"),knex=require("knex"),fullPath=e=>path.join(__dirname,"../..",e),knexfile=getKnexfile(),environment=process.env.NODE_ENV||"development",database=knex(knexfile[environment]);function getKnexfile(){try{return require(fullPath("knexfile"))}catch(e){return require(fullPath("config/knexfile"))}}module.exports=database;
