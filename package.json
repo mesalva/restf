@@ -1,8 +1,8 @@
 {
   "name": "restf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A RESTFull api blue print",
-  "main": "index.js",
+  "main": "router.js",
   "scripts": {
     "build": "gulp",
     "test": "jest"
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@types/node": "^12.12.11",
+    "dts-gen": "^0.5.8",
     "gulp": "^4.0.2",
     "gulp-rename": "^1.4.0",
     "gulp-typescript": "^6.0.0-alpha.1",
