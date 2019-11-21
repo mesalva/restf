@@ -1,9 +1,10 @@
 {
   "name": "restf",
-  "version": "0.0.10",
+  "version": "1.0.0",
   "description": "A RESTFull api blue print",
   "main": "index.js",
   "scripts": {
+    "build": "gulp",
     "test": "jest"
   },
   "author": "Andre Antunes Vieira",
@@ -14,8 +15,11 @@
     "knex": "^0.20.1"
   },
   "devDependencies": {
+    "@types/node": "^12.12.11",
     "gulp": "^4.0.2",
     "gulp-rename": "^1.4.0",
-    "gulp-uglify-es": "^2.0.0"
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify-es": "^2.0.0",
+    "typescript": "^3.7.2"
   }
 }
