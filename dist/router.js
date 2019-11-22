@@ -15,7 +15,6 @@ var RestfRouter = /** @class */ (function () {
         var addRoute = function (path, type, method) {
             if (!methods[type])
                 return null;
-            console.log('adding route', endpoint, path, method, type);
             routeReport.subRoutes && routeReport.subRoutes.push({ path: path, type: type, method: method });
             return router[method](path, type);
         };

@@ -17,7 +17,6 @@ export default class RestfRouter {
     const methods = RouteController.resourcesMethods(Controller)
     const addRoute = (path: string, type: string, method: string) => {
       if(!methods[type]) return null
-      console.log('adding route', endpoint, path, method, type)
       routeReport.subRoutes && routeReport.subRoutes.push({path, type, method})
       return router[method](path, type)
     }
