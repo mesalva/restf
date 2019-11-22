@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { Request, Response } from 'express'
 
 interface ControllerOptions {
   status?: number
@@ -33,6 +33,7 @@ export default class Controller {
   params(...permit: Array<string>) {
     const controllerPermit = this.permit
     if (controllerPermit) permit = [...controllerPermit, ...permit]
+    if (permit.length === 0) return this.req.body
     return objectFilter(this.req.body, permit)
   }
 }

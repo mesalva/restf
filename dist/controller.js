@@ -36,6 +36,8 @@ var Controller = /** @class */ (function () {
         var controllerPermit = this.permit;
         if (controllerPermit)
             permit = __spreadArrays(controllerPermit, permit);
+        if (permit.length === 0)
+            return this.req.body;
         return objectFilter(this.req.body, permit);
     };
     return Controller;

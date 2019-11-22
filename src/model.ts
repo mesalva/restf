@@ -1,4 +1,4 @@
-import database from "./database"
+import database from './database'
 
 export default class BaseModel {
   db: any
@@ -15,25 +15,21 @@ export default class BaseModel {
     return this.db
       .first()
       .where({ id })
-      .then((data: any) =>
-        data ? data : Promise.reject(new Error("Content Not Found"))
-      )
+      .then((data: any) => (data ? data : Promise.reject(new Error('Content Not Found'))))
   }
 
   findBy(column: string, value: any) {
     return this.db
       .first()
-      .where({ [ column ]: value })
-      .then((data: any) =>
-        data ? data : Promise.reject(new Error("Content Not Found"))
-      )
+      .where({ [column]: value })
+      .then((data: any) => (data ? data : Promise.reject(new Error('Content Not Found'))))
   }
 
   insertGetId(data: any) {
     return this.db
       .insert(data)
-      .returning("id")
-      .then((ids: Array<number>) => ( { id: ids[ 0 ] } ))
+      .returning('id')
+      .then((ids: Array<number>) => ({ id: ids[0] }))
   }
 
   create(data: object) {
@@ -47,7 +43,10 @@ export default class BaseModel {
   }
 
   delete(id: number) {
-    return this.db.where({ id }).delete().then(() => ( { id } ))
+    return this.db
+      .where({ id })
+      .delete()
+      .then(() => ({ id }))
   }
 
   static newDefaultData(data: object) {

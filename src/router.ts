@@ -1,5 +1,5 @@
 import { Router as ExpressRouter } from "express"
-import RouteDocsRender, { RouteReport } from "./routeDocsRender"
+import RouteDocsRender, { RouteReport } from './routeDocsRender'
 import RouteController, { addMiddleware } from './routeController'
 
 export default class Router {
