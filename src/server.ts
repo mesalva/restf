@@ -7,9 +7,12 @@ import * as helmet from 'helmet'
 import * as rateLimit from 'express-rate-limit'
 import * as hpp from 'hpp'
 import cors from './cors'
+import * as dotenv from 'dotenv'
 
 // @ts-ignore
 import * as xss from 'xss-clean'
+
+dotenv.config({ path: '../../config/config.env' })
 
 const PORT: string = process.env.PORT || '5000'
 const mode: string = process.env.NODE_ENV || 'development'

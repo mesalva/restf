@@ -9,8 +9,10 @@ var helmet = require("helmet");
 var rateLimit = require("express-rate-limit");
 var hpp = require("hpp");
 var cors_1 = require("./cors");
+var dotenv = require("dotenv");
 // @ts-ignore
 var xss = require("xss-clean");
+dotenv.config({ path: '../../config/config.env' });
 var PORT = process.env.PORT || '5000';
 var mode = process.env.NODE_ENV || 'development';
 // Rate limiting
