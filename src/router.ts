@@ -2,7 +2,7 @@ import { Router as ExpressRouter } from "express"
 import RouteDocsRender, { RouteReport } from './routeDocsRender'
 import RouteController, { addMiddleware } from './routeController'
 
-export default class Router {
+export default class RestfRouter {
   router: ExpressRouter
   routes: Array<any>
 
@@ -11,12 +11,13 @@ export default class Router {
     this.routes = []
   }
 
-  resources(path: string, Controller: any) {
+  resources(endpoint: string, Controller: any) {
     const router: any = new RouteController(Controller)
-    const routeReport: RouteReport = { path, type: 'resources', subRoutes: []}
+    const routeReport: RouteReport = { path: endpoint, type: 'resources', subRoutes: []}
     const methods = RouteController.resourcesMethods(Controller)
     const addRoute = (path: string, type: string, method: string) => {
       if(!methods[type]) return null
+      console.log('adding route', endpoint, path, method, type)
       routeReport.subRoutes && routeReport.subRoutes.push({path, type, method})
       return router[method](path, type)
     }
@@ -26,7 +27,7 @@ export default class Router {
     addRoute("/:id", "update", "put")
     addRoute("/:id", "destroy", "delete")
     this.routes.push(routeReport)
-    this.router.use(path, router.listen())
+    this.router.use(endpoint, router.listen())
     return this
   }
 

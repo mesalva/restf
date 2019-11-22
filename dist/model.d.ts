@@ -1,4 +1,4 @@
-export default class BaseModel {
+export default class RestfModel {
     db: any;
     constructor(table: string);
     all(): any;

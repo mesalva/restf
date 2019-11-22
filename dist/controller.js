@@ -7,16 +7,16 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 exports.__esModule = true;
-var Controller = /** @class */ (function () {
-    function Controller(req, res) {
+var RestfController = /** @class */ (function () {
+    function RestfController(req, res) {
         this.req = req;
         this.res = res;
     }
-    Controller.prototype.status = function (code) {
+    RestfController.prototype.status = function (code) {
         this.res.status(code);
         return this;
     };
-    Controller.prototype.respondWith = function (data, options) {
+    RestfController.prototype.respondWith = function (data, options) {
         if (options === void 0) { options = {}; }
         if (this.sent)
             return null;
@@ -28,7 +28,7 @@ var Controller = /** @class */ (function () {
         this.res.status(204);
         return this.res.send();
     };
-    Controller.prototype.params = function () {
+    RestfController.prototype.params = function () {
         var permit = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             permit[_i] = arguments[_i];
@@ -40,9 +40,9 @@ var Controller = /** @class */ (function () {
             return this.req.body;
         return objectFilter(this.req.body, permit);
     };
-    return Controller;
+    return RestfController;
 }());
-exports["default"] = Controller;
+exports["default"] = RestfController;
 function objectFilter(obj, fields) {
     return fields.reduce(function (result, field) {
         if (obj[field])

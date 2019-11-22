@@ -10,7 +10,7 @@ function build () {
 
 function minify () {
   return src('dist/**/*.js')
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(dest('dist'))
 }
 

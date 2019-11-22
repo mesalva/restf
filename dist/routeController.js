@@ -11,22 +11,22 @@ var RouteController = /** @class */ (function () {
         return route[httpMethod](addMiddleware(this.Controller, controllerMethod, path));
     };
     RouteController.prototype.get = function (path, controllerMethod) {
-        return this.addRoute(path, "get", controllerMethod);
+        return this.addRoute(path, 'get', controllerMethod);
     };
     RouteController.prototype.post = function (path, controllerMethod) {
-        return this.addRoute(path, "post", controllerMethod);
+        return this.addRoute(path, 'post', controllerMethod);
     };
     RouteController.prototype.put = function (path, controllerMethod) {
-        return this.addRoute(path, "put", controllerMethod);
+        return this.addRoute(path, 'put', controllerMethod);
     };
     RouteController.prototype["delete"] = function (path, controllerMethod) {
-        return this.addRoute(path, "delete", controllerMethod);
+        return this.addRoute(path, 'delete', controllerMethod);
     };
     RouteController.prototype.listen = function () {
         return this.router;
     };
     RouteController.resourcesMethods = function (Controller) {
-        var allowedMethods = ["index", "create", "show", "update", "destroy"];
+        var allowedMethods = ['index', 'create', 'show', 'update', 'destroy'];
         return Object.getOwnPropertyNames(Controller.prototype).reduce(function (obj, name) {
             obj[name] = allowedMethods.includes(name);
             return obj;
@@ -43,15 +43,14 @@ function addMiddleware(Controller, controllerMethod, path) {
             return result;
         if (!isPromise(result))
             return controllerInstance.respondWith(result);
-        return result
-            .then(function (r) { return controllerInstance.respondWith(r); })["catch"](handleError(controllerInstance));
+        return result.then(function (r) { return controllerInstance.respondWith(r); })["catch"](handleError(controllerInstance));
     };
 }
 exports.addMiddleware = addMiddleware;
 function handleError(controllerInstance) {
     return function (error) {
         var status = 500;
-        if (error.message === "Not Found")
+        if (error.message === 'Not Found')
             status = 404;
         return controllerInstance.respondWith({ message: error.message, status: status });
     };
@@ -64,7 +63,7 @@ function isPromise(obj) {
 function middlewareParams(path, req) {
     if (!/:/.test(path))
         return [];
-    if (path === "/:id")
+    if (path === '/:id')
         return [req.params.id];
     return Object.values(req.params);
 }

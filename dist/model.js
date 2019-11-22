@@ -12,51 +12,49 @@ var __assign = (this && this.__assign) || function () {
 };
 exports.__esModule = true;
 var database_1 = require("./database");
-var BaseModel = /** @class */ (function () {
-    function BaseModel(table) {
+var RestfModel = /** @class */ (function () {
+    function RestfModel(table) {
         this.db = database_1["default"](table);
     }
-    BaseModel.prototype.all = function () {
+    RestfModel.prototype.all = function () {
         return this.db.select();
     };
-    BaseModel.prototype.find = function (id) {
+    RestfModel.prototype.find = function (id) {
         return this.db
             .first()
             .where({ id: id })
-            .then(function (data) {
-            return data ? data : Promise.reject(new Error("Content Not Found"));
-        });
+            .then(function (data) { return (data ? data : Promise.reject(new Error('Content Not Found'))); });
     };
-    BaseModel.prototype.findBy = function (column, value) {
+    RestfModel.prototype.findBy = function (column, value) {
         var _a;
         return this.db
             .first()
             .where((_a = {}, _a[column] = value, _a))
-            .then(function (data) {
-            return data ? data : Promise.reject(new Error("Content Not Found"));
-        });
+            .then(function (data) { return (data ? data : Promise.reject(new Error('Content Not Found'))); });
     };
-    BaseModel.prototype.insertGetId = function (data) {
+    RestfModel.prototype.insertGetId = function (data) {
         return this.db
             .insert(data)
-            .returning("id")
+            .returning('id')
             .then(function (ids) { return ({ id: ids[0] }); });
     };
-    BaseModel.prototype.create = function (data) {
+    RestfModel.prototype.create = function (data) {
         return this.insertGetId(data);
     };
-    BaseModel.prototype.update = function (data, whereClause) {
+    RestfModel.prototype.update = function (data, whereClause) {
         var db = this.db.update(data);
         if (!whereClause)
             return db;
         return db.where(whereClause);
     };
-    BaseModel.prototype["delete"] = function (id) {
-        return this.db.where({ id: id })["delete"]().then(function () { return ({ id: id }); });
+    RestfModel.prototype["delete"] = function (id) {
+        return this.db
+            .where({ id: id })["delete"]()
+            .then(function () { return ({ id: id }); });
     };
-    BaseModel.newDefaultData = function (data) {
+    RestfModel.newDefaultData = function (data) {
         return __assign(__assign({}, data), { createdAt: new Date() });
     };
-    return BaseModel;
+    return RestfModel;
 }());
-exports["default"] = BaseModel;
+exports["default"] = RestfModel;

@@ -4,7 +4,7 @@ interface ControllerOptions {
   status?: number
 }
 
-export default class Controller {
+export default class RestfController {
   req: Request
   res: Response
   sent?: boolean
