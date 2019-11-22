@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "1.0.5",
+  "version": "1.1.0-rc.1",
   "description": "A RESTFull api blue print",
   "main": "router.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "author": "Andre Antunes Vieira",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.4.0",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
