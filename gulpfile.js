@@ -2,21 +2,19 @@ const { parallel, src, dest } = require('gulp')
 const uglify = require('gulp-uglify-es').default
 const ts = require('gulp-typescript')
 
-function build() {
+function build () {
   return src('src/**/*.ts')
-    .pipe(ts({declaration: true}))
+    .pipe(ts({ declaration: true }))
     .pipe(dest('dist'))
 }
 
-function minify() {
+function minify () {
   return src('dist/**/*.js')
-  .pipe(uglify())
+    .pipe(uglify())
     .pipe(dest('dist'))
 }
 
-
-
-function copyPack() {
+function copyPack () {
   return src('package.json')
     .pipe(dest('dist'))
 }
