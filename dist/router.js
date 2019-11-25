@@ -1,17 +1,21 @@
 "use strict";
 exports.__esModule = true;
 var express_1 = require("express");
-var routeDocsRender_1 = require("./routeDocsRender");
-var routeController_1 = require("./routeController");
+var _routeDocsRender_1 = require("./.routeDocsRender");
+var _routeController_1 = require("./.routeController");
 var RestfRouter = /** @class */ (function () {
     function RestfRouter() {
         this.router = express_1.Router();
         this.routes = [];
+        this.get = this._addMethod('get');
+        this.post = this._addMethod('post');
+        this["delete"] = this._addMethod('delete');
+        this.update = this._addMethod('update');
     }
     RestfRouter.prototype.resources = function (endpoint, Controller) {
-        var router = new routeController_1["default"](Controller);
+        var router = new _routeController_1["default"](Controller);
         var routeReport = { path: endpoint, type: 'resources', subRoutes: [] };
-        var methods = routeController_1["default"].resourcesMethods(Controller);
+        var methods = _routeController_1["default"].resourcesMethods(Controller);
         var addRoute = function (path, type, method) {
             if (!methods[type])
                 return null;
@@ -29,20 +33,18 @@ var RestfRouter = /** @class */ (function () {
     };
     RestfRouter.prototype.docs = function (path) {
         var _this = this;
-        this.router.get(path, function (req, res) { return new routeDocsRender_1["default"](req, res).render(_this.routes); });
-    };
-    RestfRouter.prototype.post = function (path, method, Controller) {
-        this.routes.push({ path: path, method: 'post', type: method });
-        this.router.post(path, routeController_1.addMiddleware(Controller, method, path));
-        return this;
-    };
-    RestfRouter.prototype.get = function (path, method, Controller) {
-        this.routes.push({ path: path, method: 'get', type: method });
-        this.router.get(path, routeController_1.addMiddleware(Controller, method, path));
-        return this;
+        this.router.get(path, function (req, res) { return new _routeDocsRender_1["default"](req, res).render(_this.routes); });
     };
     RestfRouter.prototype.listen = function () {
         return this.router;
+    };
+    RestfRouter.prototype._addMethod = function (httpMethod) {
+        var _this = this;
+        return function (path, Controller, controllerMethod) {
+            _this.routes.push({ path: path, method: httpMethod, type: controllerMethod });
+            _this.router[httpMethod](path, _routeController_1.addMiddleware(Controller, controllerMethod, path));
+            return _this;
+        };
     };
     return RestfRouter;
 }());

@@ -8,8 +8,8 @@ var cookieParser = require("cookie-parser");
 var helmet = require("helmet");
 var rateLimit = require("express-rate-limit");
 var hpp = require("hpp");
-var cors_1 = require("./cors");
 var dotenv = require("dotenv");
+var _cors_1 = require("./.cors");
 // @ts-ignore
 var xss = require("xss-clean");
 dotenv.config({ path: '../../config/config.env' });
@@ -46,7 +46,7 @@ var RestfServer = /** @class */ (function () {
         this.use(xss());
         this.use(hpp());
         this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
-        this.use(cors_1["default"]());
+        this.use(_cors_1["default"]());
     };
     RestfServer.prototype._setContentMiddlewares = function () {
         this.use(express.json());

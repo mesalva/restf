@@ -11,10 +11,10 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 exports.__esModule = true;
-var database_1 = require("./database");
+var _database_1 = require("./.database");
 var RestfModel = /** @class */ (function () {
     function RestfModel(table) {
-        this.db = database_1["default"](table);
+        this.db = _database_1["default"](table);
     }
     RestfModel.prototype.all = function () {
         return this.db.select();

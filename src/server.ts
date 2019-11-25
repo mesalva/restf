@@ -6,8 +6,8 @@ import * as cookieParser from 'cookie-parser'
 import * as helmet from 'helmet'
 import * as rateLimit from 'express-rate-limit'
 import * as hpp from 'hpp'
-import cors from './cors'
 import * as dotenv from 'dotenv'
+import cors from './.cors'
 
 // @ts-ignore
 import * as xss from 'xss-clean'

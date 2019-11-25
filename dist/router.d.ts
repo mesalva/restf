@@ -1,11 +1,18 @@
 import { Router as ExpressRouter } from "express";
+import { RouteReport } from './.routeDocsRender';
+import RestfController from './controller';
+declare type MethodAlias = (path: string, Controller: any, controllerMethod: string) => any;
 export default class RestfRouter {
     router: ExpressRouter;
-    routes: Array<any>;
+    routes: Array<RouteReport>;
+    get: MethodAlias;
+    post: MethodAlias;
+    delete: MethodAlias;
+    update: MethodAlias;
     constructor();
-    resources(endpoint: string, Controller: any): this;
+    resources(endpoint: string, Controller: RestfController): this;
     docs(path: string): void;
-    post(path: string, method: string, Controller: any): this;
-    get(path: string, method: string, Controller: any): this;
     listen(): any;
+    private _addMethod;
 }
+export {};
