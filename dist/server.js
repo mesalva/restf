@@ -12,7 +12,7 @@ var dotenv = require("dotenv");
 var _cors_1 = require("./.cors");
 // @ts-ignore
 var xss = require("xss-clean");
-dotenv.config({ path: '../../config/config.env' });
+dotenv.config({ path: './config/config.env' });
 var PORT = process.env.PORT || '5000';
 var mode = process.env.NODE_ENV || 'development';
 // Rate limiting
