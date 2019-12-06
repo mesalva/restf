@@ -22,30 +22,49 @@ const tenMinutes: number = 10 * 60 * 1000
 
 export default class RestfServer {
   _app: express.Express
+  afterMiddlewares: any[]
 
   constructor() {
     this._app = express()
-    this._setContentMiddlewares()
-    this._setSecurityMiddlewares()
+    this.setContentMiddlewares()
+    this.setSecurityMiddlewares()
+    this.setAfterMiddlewares()
   }
 
-  use(...args) {
+  public use(...args) {
     return this._app.use(...args)
   }
 
-  public() {
-    this.use(express.static(path.join(__dirname, 'public')))
+  public apidocs(folder: string = 'doc') {
+    this._app.get(`/${folder}`, (_, res) => res.redirect(302, `/${folder}/index.html`))
+    this._app.use(express.static(folder))
   }
 
-  listen() {
-    this._setEndpointNotFoundMiddleware()
-    this._setGenericalErrorMiddleware()
-    this._setUnhandledRejection()
+  public public(folder: string = 'public') {
+    this.use(express.static(path.join(__dirname, folder)))
+  }
+
+  public listen() {
+    this.setEndpointNotFoundMiddleware()
+    this.setGeneralErrorMiddleware()
+    this.setUnhandledRejection()
     const message = `Server running in ${mode} mode on port ${PORT}\n`.cyan
     this._app.listen(PORT, () => process.stdout.write(message))
   }
 
-  _setSecurityMiddlewares() {
+  public useAfter(middleware) {
+    this.afterMiddlewares.push(middleware)
+  }
+
+  private setAfterMiddlewares() {
+    this.afterMiddlewares = []
+    this.use((req, res, next) => {
+      req.afterMiddlewares = this.afterMiddlewares
+      return next()
+    })
+  }
+
+  private setSecurityMiddlewares() {
     this.use(helmet())
     this.use(xss())
     this.use(hpp())
@@ -53,13 +72,13 @@ export default class RestfServer {
     this.use(cors())
   }
 
-  _setContentMiddlewares() {
+  private setContentMiddlewares() {
     this.use(express.json())
     this.use(cookieParser())
     this.use(fileupload())
   }
 
-  _setEndpointNotFoundMiddleware() {
+  private setEndpointNotFoundMiddleware() {
     this.use((_: express.Request, res: express.Response) => {
       const error = 'Endpoint not found'
       res.status(404)
@@ -67,7 +86,7 @@ export default class RestfServer {
     })
   }
 
-  _setGenericalErrorMiddleware() {
+  private setGeneralErrorMiddleware() {
     this.use((err: any, req: express.Request, res: express.Response, next: any) => {
       const error = err.message || 'Server Error'
       res.status(err.statusCode || 500)
@@ -76,7 +95,7 @@ export default class RestfServer {
     })
   }
 
-  _setUnhandledRejection() {
+  private setUnhandledRejection() {
     process.on('unhandledRejection', function(err: Error) {
       process.stdout.write(`UnhandledRejection Error: ${err.message}\n`.red)
     })

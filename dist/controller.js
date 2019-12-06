@@ -22,11 +22,24 @@ var RestfController = /** @class */ (function () {
             return null;
         if (options.status)
             this.res.status(options.status);
-        this.sent = true;
         if (options.status || data)
-            return this.res.json(data);
+            return this.sendWithMiddlewares(data);
+        this.sent = true;
         this.res.status(204);
         return this.res.send();
+    };
+    RestfController.prototype.sendWithMiddlewares = function (data, i) {
+        var _this = this;
+        if (i === void 0) { i = 0; }
+        if (i >= this.req.afterMiddlewares.length) {
+            if (this.sent)
+                return null;
+            this.sent = true;
+            if (typeof data === 'string')
+                return this.res.send(data);
+            return this.res.json(data);
+        }
+        this.req.afterMiddlewares[i](this, data, function (newData) { return _this.sendWithMiddlewares(newData, i + 1); });
     };
     RestfController.prototype.params = function () {
         var permit = [];

@@ -7,10 +7,10 @@ var RestfRouter = /** @class */ (function () {
     function RestfRouter() {
         this.router = express_1.Router();
         this.routes = [];
-        this.get = this._addMethod('get');
-        this.post = this._addMethod('post');
-        this["delete"] = this._addMethod('delete');
-        this.update = this._addMethod('update');
+        this.get = this.addMethod('get');
+        this.post = this.addMethod('post');
+        this["delete"] = this.addMethod('delete');
+        this.update = this.addMethod('update');
     }
     RestfRouter.prototype.resources = function (endpoint, Controller) {
         var router = new _routeController_1["default"](Controller);
@@ -22,11 +22,11 @@ var RestfRouter = /** @class */ (function () {
             routeReport.subRoutes && routeReport.subRoutes.push({ path: path, type: type, method: method });
             return router[method](path, type);
         };
-        addRoute("/", "index", "get");
-        addRoute("/", "create", "post");
-        addRoute("/:id", "show", "get");
-        addRoute("/:id", "update", "put");
-        addRoute("/:id", "destroy", "delete");
+        addRoute('/', 'index', 'get');
+        addRoute('/', 'create', 'post');
+        addRoute('/:id', 'show', 'get');
+        addRoute('/:id', 'update', 'put');
+        addRoute('/:id', 'destroy', 'delete');
         this.routes.push(routeReport);
         this.router.use(endpoint, router.listen());
         return this;
@@ -38,7 +38,7 @@ var RestfRouter = /** @class */ (function () {
     RestfRouter.prototype.listen = function () {
         return this.router;
     };
-    RestfRouter.prototype._addMethod = function (httpMethod) {
+    RestfRouter.prototype.addMethod = function (httpMethod) {
         var _this = this;
         return function (path, Controller, controllerMethod) {
             _this.routes.push({ path: path, method: httpMethod, type: controllerMethod });

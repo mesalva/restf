@@ -2,13 +2,17 @@ import 'colors';
 import * as express from 'express';
 export default class RestfServer {
     _app: express.Express;
+    afterMiddlewares: any[];
     constructor();
     use(...args: any[]): any;
-    public(): void;
+    apidocs(folder?: string): void;
+    public(folder?: string): void;
     listen(): void;
-    _setSecurityMiddlewares(): void;
-    _setContentMiddlewares(): void;
-    _setEndpointNotFoundMiddleware(): void;
-    _setGenericalErrorMiddleware(): void;
-    _setUnhandledRejection(): void;
+    useAfter(middleware: any): void;
+    private setAfterMiddlewares;
+    private setSecurityMiddlewares;
+    private setContentMiddlewares;
+    private setEndpointNotFoundMiddleware;
+    private setGeneralErrorMiddleware;
+    private setUnhandledRejection;
 }

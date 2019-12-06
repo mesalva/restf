@@ -20,8 +20,9 @@ var tenMinutes = 10 * 60 * 1000;
 var RestfServer = /** @class */ (function () {
     function RestfServer() {
         this._app = express();
-        this._setContentMiddlewares();
-        this._setSecurityMiddlewares();
+        this.setContentMiddlewares();
+        this.setSecurityMiddlewares();
+        this.setAfterMiddlewares();
     }
     RestfServer.prototype.use = function () {
         var _a;
@@ -31,36 +32,53 @@ var RestfServer = /** @class */ (function () {
         }
         return (_a = this._app).use.apply(_a, args);
     };
-    RestfServer.prototype.public = function () {
-        this.use(express.static(path.join(__dirname, 'public')));
+    RestfServer.prototype.apidocs = function (folder) {
+        if (folder === void 0) { folder = 'doc'; }
+        this._app.get("/" + folder, function (_, res) { return res.redirect(302, "/" + folder + "/index.html"); });
+        this._app.use(express.static(folder));
+    };
+    RestfServer.prototype.public = function (folder) {
+        if (folder === void 0) { folder = 'public'; }
+        this.use(express.static(path.join(__dirname, folder)));
     };
     RestfServer.prototype.listen = function () {
-        this._setEndpointNotFoundMiddleware();
-        this._setGenericalErrorMiddleware();
-        this._setUnhandledRejection();
+        this.setEndpointNotFoundMiddleware();
+        this.setGeneralErrorMiddleware();
+        this.setUnhandledRejection();
         var message = ("Server running in " + mode + " mode on port " + PORT + "\n").cyan;
         this._app.listen(PORT, function () { return process.stdout.write(message); });
     };
-    RestfServer.prototype._setSecurityMiddlewares = function () {
+    RestfServer.prototype.useAfter = function (middleware) {
+        this.afterMiddlewares.push(middleware);
+    };
+    RestfServer.prototype.setAfterMiddlewares = function () {
+        var _this = this;
+        this.afterMiddlewares = [];
+        this.use(function (req, res, next) {
+            req.afterMiddlewares = _this.afterMiddlewares;
+            return next();
+        });
+    };
+    RestfServer.prototype.setSecurityMiddlewares = function () {
         this.use(helmet());
         this.use(xss());
         this.use(hpp());
         this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
         this.use(_cors_1["default"]());
     };
-    RestfServer.prototype._setContentMiddlewares = function () {
+    RestfServer.prototype.setContentMiddlewares = function () {
         this.use(express.json());
         this.use(cookieParser());
         this.use(fileupload());
     };
-    RestfServer.prototype._setEndpointNotFoundMiddleware = function () {
+    RestfServer.prototype.setEndpointNotFoundMiddleware = function () {
         this.use(function (_, res) {
             var error = 'Endpoint not found';
             res.status(404);
             return res.json({ error: error });
         });
     };
-    RestfServer.prototype._setGenericalErrorMiddleware = function () {
+    RestfServer.prototype.setGeneralErrorMiddleware = function () {
         this.use(function (err, req, res, next) {
             var error = err.message || 'Server Error';
             res.status(err.statusCode || 500);
@@ -68,7 +86,7 @@ var RestfServer = /** @class */ (function () {
             return next();
         });
     };
-    RestfServer.prototype._setUnhandledRejection = function () {
+    RestfServer.prototype.setUnhandledRejection = function () {
         process.on('unhandledRejection', function (err) {
             process.stdout.write(("UnhandledRejection Error: " + err.message + "\n").red);
         });

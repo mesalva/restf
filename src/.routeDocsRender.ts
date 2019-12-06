@@ -33,5 +33,5 @@ export interface RouteReport {
   path: string
   type: string
   method?: string
-  subRoutes?: Array<RouteReport>
+  subRoutes?: RouteReport[]
 }

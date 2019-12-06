@@ -5,12 +5,12 @@ interface ControllerOptions {
 }
 
 export default class RestfController {
-  req: Request
-  res: Response
+  req: Request | any
+  res: Response | any
   sent?: boolean
   permit?: Array<string>
 
-  constructor(req: Request, res: Response) {
+  constructor(req: Request | any, res: Response | any) {
     this.req = req
     this.res = res
   }
@@ -23,11 +23,21 @@ export default class RestfController {
   respondWith(data: any, options: ControllerOptions = {}) {
     if (this.sent) return null
     if (options.status) this.res.status(options.status)
-    this.sent = true
-    if (options.status || data) return this.res.json(data)
+    if (options.status || data) return this.sendWithMiddlewares(data)
 
+    this.sent = true
     this.res.status(204)
     return this.res.send()
+  }
+
+  private sendWithMiddlewares(data, i = 0) {
+    if (i >= this.req.afterMiddlewares.length) {
+      if (this.sent) return null
+      this.sent = true
+      if (typeof data === 'string') return this.res.send(data)
+      return this.res.json(data)
+    }
+    this.req.afterMiddlewares[i](this, data, newData => this.sendWithMiddlewares(newData, i + 1))
   }
 
   params(...permit: Array<string>) {
