@@ -32,10 +32,11 @@ var RestfServer = /** @class */ (function () {
         }
         return (_a = this._app).use.apply(_a, args);
     };
-    RestfServer.prototype.apidocs = function (folder) {
+    RestfServer.prototype.apidocs = function (folder, route) {
         if (folder === void 0) { folder = 'doc'; }
-        this._app.get("/" + folder, function (_, res) { return res.redirect(302, "/" + folder + "/index.html"); });
-        this._app.use(express.static(folder));
+        if (!route)
+            route = folder;
+        this._app.get("/" + route, function (_, res) { return res.sendFile(process.cwd() + "/" + folder + "/index.html"); });
     };
     RestfServer.prototype.public = function (folder) {
         if (folder === void 0) { folder = 'public'; }

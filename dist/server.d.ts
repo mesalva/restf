@@ -5,7 +5,7 @@ export default class RestfServer {
     afterMiddlewares: any[];
     constructor();
     use(...args: any[]): any;
-    apidocs(folder?: string): void;
+    apidocs(folder?: string, route?: string): void;
     public(folder?: string): void;
     listen(): void;
     useAfter(middleware: any): void;

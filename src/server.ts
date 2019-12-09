@@ -35,9 +35,9 @@ export default class RestfServer {
     return this._app.use(...args)
   }
 
-  public apidocs(folder: string = 'doc') {
-    this._app.get(`/${folder}`, (_, res) => res.redirect(302, `/${folder}/index.html`))
-    this._app.use(express.static(folder))
+  public apidocs(folder: string = 'doc', route?: string) {
+    if (!route) route = folder
+    this._app.get(`/${route}`, (_, res) => res.sendFile(`${process.cwd()}/${folder}/index.html`))
   }
 
   public public(folder: string = 'public') {
