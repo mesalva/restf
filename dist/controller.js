@@ -31,15 +31,15 @@ var RestfController = /** @class */ (function () {
     RestfController.prototype.sendWithMiddlewares = function (data, i) {
         var _this = this;
         if (i === void 0) { i = 0; }
-        if (i >= this.req.afterMiddlewares.length) {
-            if (this.sent)
-                return null;
-            this.sent = true;
-            if (typeof data === 'string')
-                return this.res.send(data);
-            return this.res.json(data);
+        if (this.req.afterMiddlewares && i < this.req.afterMiddlewares.length) {
+            return this.req.afterMiddlewares[i](this, data, function (newData) { return _this.sendWithMiddlewares(newData, i + 1); });
         }
-        this.req.afterMiddlewares[i](this, data, function (newData) { return _this.sendWithMiddlewares(newData, i + 1); });
+        if (this.sent)
+            return null;
+        this.sent = true;
+        if (typeof data === 'string')
+            return this.res.send(data);
+        return this.res.json(data);
     };
     RestfController.prototype.params = function () {
         var permit = [];

@@ -31,13 +31,13 @@ export default class RestfController {
   }
 
   private sendWithMiddlewares(data, i = 0) {
-    if (i >= this.req.afterMiddlewares.length) {
-      if (this.sent) return null
-      this.sent = true
-      if (typeof data === 'string') return this.res.send(data)
-      return this.res.json(data)
+    if (this.req.afterMiddlewares && i < this.req.afterMiddlewares.length) {
+      return this.req.afterMiddlewares[i](this, data, newData => this.sendWithMiddlewares(newData, i + 1))
     }
-    this.req.afterMiddlewares[i](this, data, newData => this.sendWithMiddlewares(newData, i + 1))
+    if (this.sent) return null
+    this.sent = true
+    if (typeof data === 'string') return this.res.send(data)
+    return this.res.json(data)
   }
 
   params(...permit: Array<string>) {
