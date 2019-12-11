@@ -38,6 +38,7 @@ exports["default"] = RouteController;
 function addMiddleware(Controller, controllerMethod, path) {
     return function (req, res) {
         var controllerInstance = new Controller(req, res);
+        console.log(path, req.url);
         var result = controllerInstance[controllerMethod].apply(controllerInstance, middlewareParams(path, req));
         if (controllerInstance.sent)
             return result;
@@ -65,5 +66,15 @@ function middlewareParams(path, req) {
         return [];
     if (path === '/:id')
         return [req.params.id];
+    if (/:\w+\*/.test(path))
+        return endingParam(path, req);
     return Object.values(req.params);
+}
+function endingParam(path, req) {
+    var params = req.params;
+    var sufix = params['0'];
+    delete params['0'];
+    var lastParamName = path.replace(/.*\/:(\w+)\*$/, '$1');
+    params[lastParamName] = params[lastParamName] + sufix;
+    return Object.values(params);
 }

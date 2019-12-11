@@ -46,6 +46,7 @@ export default class RouteController {
 export function addMiddleware(Controller: any, controllerMethod: string, path: string) {
   return (req: Request, res: Response) => {
     const controllerInstance = new Controller(req, res)
+    console.log(path, req.url)
     const result = controllerInstance[controllerMethod](...middlewareParams(path, req))
 
     if (controllerInstance.sent) return result
@@ -70,5 +71,15 @@ function isPromise(obj: any) {
 function middlewareParams(path: string, req: Request) {
   if (!/:/.test(path)) return []
   if (path === '/:id') return [req.params.id]
+  if (/:\w+\*/.test(path)) return endingParam(path, req)
   return Object.values(req.params)
+}
+
+function endingParam(path, req) {
+  const params = req.params
+  const sufix = params['0']
+  delete params['0']
+  const lastParamName = path.replace(/.*\/:(\w+)\*$/, '$1')
+  params[lastParamName] = params[lastParamName] + sufix
+  return Object.values(params)
 }
