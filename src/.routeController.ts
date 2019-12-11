@@ -46,7 +46,6 @@ export default class RouteController {
 export function addMiddleware(Controller: any, controllerMethod: string, path: string) {
   return (req: Request, res: Response) => {
     const controllerInstance = new Controller(req, res)
-    console.log(path, req.url)
     const result = controllerInstance[controllerMethod](...middlewareParams(path, req))
 
     if (controllerInstance.sent) return result

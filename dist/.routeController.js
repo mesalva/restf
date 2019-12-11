@@ -38,7 +38,6 @@ exports["default"] = RouteController;
 function addMiddleware(Controller, controllerMethod, path) {
     return function (req, res) {
         var controllerInstance = new Controller(req, res);
-        console.log(path, req.url);
         var result = controllerInstance[controllerMethod].apply(controllerInstance, middlewareParams(path, req));
         if (controllerInstance.sent)
             return result;
