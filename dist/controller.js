@@ -9,9 +9,18 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 var RestfController = /** @class */ (function () {
     function RestfController(req, res) {
+        this.currentMethod = 'undefined';
         this.req = req;
         this.res = res;
     }
+    RestfController.prototype.run = function (method) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        this.currentMethod = method;
+        return this[method].apply(this, args);
+    };
     RestfController.prototype.status = function (code) {
         this.res.status(code);
         return this;
@@ -27,6 +36,20 @@ var RestfController = /** @class */ (function () {
         this.sent = true;
         this.res.status(204);
         return this.res.send();
+    };
+    RestfController.prototype.serialize = function () {
+        var _a;
+        var a = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            a[_i] = arguments[_i];
+        }
+        // @ts-ignore
+        var Serializer = this.constructor.serializer;
+        // @ts-ignore
+        if (!Serializer)
+            return null;
+        var currentMethod = this.currentMethod;
+        return (_a = new Serializer(this))[currentMethod].apply(_a, a);
     };
     RestfController.prototype.sendWithMiddlewares = function (data, i) {
         var _this = this;
@@ -53,6 +76,7 @@ var RestfController = /** @class */ (function () {
             return this.req.body;
         return objectFilter(this.req.body, permit);
     };
+    RestfController.serialize = undefined;
     return RestfController;
 }());
 exports["default"] = RestfController;

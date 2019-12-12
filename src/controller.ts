@@ -9,18 +9,26 @@ export default class RestfController {
   res: Response | any
   sent?: boolean
   permit?: Array<string>
+  currentMethod?: string = 'undefined'
+
+  protected static serialize = undefined
 
   constructor(req: Request | any, res: Response | any) {
     this.req = req
     this.res = res
   }
 
-  status(code: number) {
+  public run(method: string, ...args){
+    this.currentMethod = method
+    return this[method](...args)
+  }
+
+  protected status(code: number) {
     this.res.status(code)
     return this
   }
 
-  respondWith(data: any, options: ControllerOptions = {}) {
+  protected respondWith(data: any, options: ControllerOptions = {}) {
     if (this.sent) return null
     if (options.status) this.res.status(options.status)
     if (options.status || data) return this.sendWithMiddlewares(data)
@@ -28,6 +36,15 @@ export default class RestfController {
     this.sent = true
     this.res.status(204)
     return this.res.send()
+  }
+
+  protected serialize(...a: any[]){
+    // @ts-ignore
+    const Serializer = this.constructor.serializer
+    // @ts-ignore
+    if(!Serializer) return null
+    const currentMethod = this.currentMethod
+    return new Serializer(this)[currentMethod](...a)
   }
 
   private sendWithMiddlewares(data, i = 0) {
