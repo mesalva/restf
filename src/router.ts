@@ -1,9 +1,10 @@
 import { Router as ExpressRouter } from 'express'
 import RouteDocsRender, { RouteReport } from './.routeDocsRender'
-import RouteController, { addMiddleware } from './.routeController'
+import RouteController from './.routeController'
+import { addMiddleware } from './.helpers'
 import RestfController from './controller'
 
-type MethodAlias = (path: string, Controller: any, controllerMethod: string) => any
+type MethodAlias = (path: string, controllerMethod: string) => any
 
 export default class RestfRouter {
   router: ExpressRouter
@@ -50,9 +51,10 @@ export default class RestfRouter {
   }
 
   private addMethod(httpMethod) {
-    return (path: string, Controller: any, controllerMethod: string) => {
-      this.routes.push({ path, method: httpMethod, type: controllerMethod })
-      this.router[httpMethod](path, addMiddleware(Controller, controllerMethod, path))
+    return (path: string, controllerMethod: string) => {
+      const [controllerName, methodName] = controllerMethod.split('@')
+      this.routes.push({ path, method: httpMethod, type: methodName })
+      this.router[httpMethod](path, addMiddleware(controllerName, methodName, path))
       return this
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "2.3.0",
+  "version": "2.4.1",
   "description": "A RESTFull api blue print",
   "main": "router.js",
   "scripts": {

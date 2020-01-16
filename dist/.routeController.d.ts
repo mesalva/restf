@@ -11,4 +11,3 @@ export default class RouteController {
     listen(): any;
     static resourcesMethods(Controller: any): any;
 }
-export declare function addMiddleware(Controller: any, controllerMethod: string, path: string): (req: any, res: any) => any;

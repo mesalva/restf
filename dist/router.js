@@ -3,6 +3,7 @@ exports.__esModule = true;
 var express_1 = require("express");
 var _routeDocsRender_1 = require("./.routeDocsRender");
 var _routeController_1 = require("./.routeController");
+var _helpers_1 = require("./.helpers");
 var RestfRouter = /** @class */ (function () {
     function RestfRouter() {
         this.router = express_1.Router();
@@ -40,9 +41,10 @@ var RestfRouter = /** @class */ (function () {
     };
     RestfRouter.prototype.addMethod = function (httpMethod) {
         var _this = this;
-        return function (path, Controller, controllerMethod) {
-            _this.routes.push({ path: path, method: httpMethod, type: controllerMethod });
-            _this.router[httpMethod](path, _routeController_1.addMiddleware(Controller, controllerMethod, path));
+        return function (path, controllerMethod) {
+            var _a = controllerMethod.split('@'), controllerName = _a[0], methodName = _a[1];
+            _this.routes.push({ path: path, method: httpMethod, type: methodName });
+            _this.router[httpMethod](path, _helpers_1.addMiddleware(controllerName, methodName, path));
             return _this;
         };
     };

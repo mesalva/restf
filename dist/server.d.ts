@@ -12,6 +12,7 @@ export default class RestfServer {
     private setAfterMiddlewares;
     private setSecurityMiddlewares;
     private setContentMiddlewares;
+    private setControllersMiddleware;
     private setEndpointNotFoundMiddleware;
     private setGeneralErrorMiddleware;
     private setUnhandledRejection;

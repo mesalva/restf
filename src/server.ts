@@ -1,4 +1,5 @@
 import 'colors'
+import * as fs from 'fs'
 import * as path from 'path'
 import * as express from 'express'
 import * as fileupload from 'express-fileupload'
@@ -27,6 +28,7 @@ export default class RestfServer {
   constructor() {
     this._app = express()
     this.setContentMiddlewares()
+    this.setControllersMiddleware()
     this.setSecurityMiddlewares()
     this.setAfterMiddlewares()
   }
@@ -78,6 +80,14 @@ export default class RestfServer {
     this.use(fileupload())
   }
 
+  private setControllersMiddleware() {
+    declareControllers()
+    this.use((req, _res, next) => {
+      req.AllControllers = require(`./.allControllers.js`)
+      next()
+    })
+  }
+
   private setEndpointNotFoundMiddleware() {
     this.use((_: express.Request, res: express.Response) => {
       const error = 'Endpoint not found'
@@ -100,6 +110,24 @@ export default class RestfServer {
       process.stdout.write(`UnhandledRejection Error: ${err.message}\n`.red)
     })
   }
+}
+
+//TODO criar classe para isso?
+function declareControllers() {
+  const controllersFolderPath = `${process.cwd()}/src/controllers`
+  if (!fs.existsSync(controllersFolderPath)) {
+    return fs.writeFileSync(`${__dirname}/.allControllers.js`, 'export {}')
+  }
+  const files = fs
+    .readdirSync(controllersFolderPath)
+    .filter(file => file.match(/[A-Z].*\.ts$/))
+    .map(file => file.replace(/\.ts$/, ''))
+  let content = 'module.exports = {\n'
+  content += files
+    .map(controllerName => `  ${controllerName}: require('${controllersFolderPath}/${controllerName}').default,`)
+    .join('\n')
+  content += '\n}'
+  fs.writeFileSync(`${__dirname}/.allControllers.js`, content)
 }
 
 declare var __dirname: any
