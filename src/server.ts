@@ -82,7 +82,6 @@ export default class RestfServer {
   }
 
   private setControllersMiddleware() {
-    declareControllers()
     this.use((req, _res, next) => {
       req.AllControllers = require(`./.allControllers.js`)
       next()
@@ -114,22 +113,6 @@ export default class RestfServer {
 }
 
 //TODO criar classe para isso?
-function declareControllers() {
-  const controllersFolderPath = `${process.cwd()}/src/controllers`
-  if (!fs.existsSync(controllersFolderPath)) {
-    return fs.writeFileSync(`${__dirname}/.allControllers.js`, 'export {}')
-  }
-  const files = fs
-    .readdirSync(controllersFolderPath)
-    .filter(file => file.match(/[A-Z].*\.ts$/))
-    .map(file => file.replace(/\.ts$/, ''))
-  let content = 'module.exports = {\n'
-  content += files
-    .map(controllerName => `  ${controllerName}: require('${controllersFolderPath}/${controllerName}').default,`)
-    .join('\n')
-  content += '\n}'
-  fs.writeFileSync(`${__dirname}/.allControllers.js`, content)
-}
 
 declare var __dirname: any
 declare var process: any

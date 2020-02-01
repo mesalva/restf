@@ -78,7 +78,6 @@ var RestfServer = /** @class */ (function () {
         this.use(fileupload());
     };
     RestfServer.prototype.setControllersMiddleware = function () {
-        declareControllers();
         this.use(function (req, _res, next) {
             req.AllControllers = require("./.allControllers.js");
             next();
@@ -107,20 +106,3 @@ var RestfServer = /** @class */ (function () {
     return RestfServer;
 }());
 exports["default"] = RestfServer;
-//TODO criar classe para isso?
-function declareControllers() {
-    var controllersFolderPath = process.cwd() + "/src/controllers";
-    if (!fs.existsSync(controllersFolderPath)) {
-        return fs.writeFileSync(__dirname + "/.allControllers.js", 'export {}');
-    }
-    var files = fs
-        .readdirSync(controllersFolderPath)
-        .filter(function (file) { return file.match(/[A-Z].*\.ts$/); })
-        .map(function (file) { return file.replace(/\.ts$/, ''); });
-    var content = 'module.exports = {\n';
-    content += files
-        .map(function (controllerName) { return "  " + controllerName + ": require('" + controllersFolderPath + "/" + controllerName + "').default,"; })
-        .join('\n');
-    content += '\n}';
-    fs.writeFileSync(__dirname + "/.allControllers.js", content);
-}
