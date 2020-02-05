@@ -1,9 +1,9 @@
 import * as fs from 'fs'
 
-export function declareControllers(folderPath = 'src') {
+export function declareControllers(folderPath = 'src', repoPath = undefined) {
   const controllersFolderPath = `${process.cwd()}/${folderPath}/controllers`
   if (!fs.existsSync(controllersFolderPath)) {
-    return fs.writeFileSync(`${__dirname}/.allControllers.js`, 'export {}')
+    return fs.writeFileSync(`${repoPath}/node_modules/restf/.allControllers.js`, 'module.exports = {}')
   }
   const files = fs
     .readdirSync(controllersFolderPath)
@@ -11,8 +11,8 @@ export function declareControllers(folderPath = 'src') {
     .map(file => file.replace(/\.[tj]s$/, ''))
   let content = 'module.exports = {\n'
   content += files
-    .map(controllerName => `  ${controllerName}: require('${controllersFolderPath}/${controllerName}').default,`)
+    .map(controllerName => `  ${controllerName}: require('${repoPath}/${folderPath}/controllers/${controllerName}').default,`)
     .join('\n')
   content += '\n}'
-  fs.writeFileSync(`${__dirname}/.allControllers.js`, content)
+  fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, content)
 }
