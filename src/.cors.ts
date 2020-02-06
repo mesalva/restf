@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 
-export default function cors() {
+export default function cors(openCors = false) {
   return (req: Request, res: Response, next: NextFunction) => {
     const knownHosts = process.env.KNOWN_HOSTS || ''
     const hosts = knownHosts.replace(/\s/g, '').split(',')
     const origin: string = getOrigin(req.headers)
-    if (!origin) {
+    if (openCors || !origin) {
       setCors(res, '*')
       return next()
     }

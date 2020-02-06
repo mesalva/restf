@@ -3,7 +3,8 @@ import * as express from 'express';
 export default class RestfServer {
     _app: express.Express;
     afterMiddlewares: any[];
-    constructor();
+    options: any;
+    constructor(options?: any);
     use(...args: any[]): any;
     apidocs(folder?: string, route?: string): void;
     public(folder?: string): void;

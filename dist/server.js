@@ -22,8 +22,10 @@ var mode = process.env.NODE_ENV || 'development';
 // Rate limiting
 var tenMinutes = 10 * 60 * 1000;
 var RestfServer = /** @class */ (function () {
-    function RestfServer() {
+    function RestfServer(options) {
+        if (options === void 0) { options = {}; }
         this._app = express();
+        this.options = options;
         this.setContentMiddlewares();
         this.setControllersMiddleware();
         this.setSecurityMiddlewares();
@@ -70,7 +72,7 @@ var RestfServer = /** @class */ (function () {
         this.use(xss());
         this.use(hpp());
         this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
-        this.use(_cors_1["default"]());
+        this.use(_cors_1["default"](this.options.openCors));
     };
     RestfServer.prototype.setContentMiddlewares = function () {
         this.use(express.json());

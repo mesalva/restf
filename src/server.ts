@@ -25,9 +25,11 @@ const tenMinutes: number = 10 * 60 * 1000
 export default class RestfServer {
   _app: express.Express
   afterMiddlewares: any[]
+  options: any
 
-  constructor() {
+  constructor(options: any = {}) {
     this._app = express()
+    this.options = options
     this.setContentMiddlewares()
     this.setControllersMiddleware()
     this.setSecurityMiddlewares()
@@ -72,7 +74,7 @@ export default class RestfServer {
     this.use(xss())
     this.use(hpp())
     this.use(rateLimit({ windowMs: tenMinutes, max: 100 }))
-    this.use(cors())
+    this.use(cors(this.options.openCors))
   }
 
   private setContentMiddlewares() {

@@ -1,11 +1,12 @@
 "use strict";
 exports.__esModule = true;
-function cors() {
+function cors(openCors) {
+    if (openCors === void 0) { openCors = false; }
     return function (req, res, next) {
         var knownHosts = process.env.KNOWN_HOSTS || '';
         var hosts = knownHosts.replace(/\s/g, '').split(',');
         var origin = getOrigin(req.headers);
-        if (!origin) {
+        if (openCors || !origin) {
             setCors(res, '*');
             return next();
         }
