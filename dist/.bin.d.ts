@@ -1,1 +1,1 @@
-export declare function declareControllers(folderPath?: string): void;
+export declare function declareControllers(folderPath?: string, repoPath?: any): void;
