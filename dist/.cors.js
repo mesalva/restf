@@ -1,12 +1,10 @@
 "use strict";
 exports.__esModule = true;
-function cors(openCors) {
-    if (openCors === void 0) { openCors = false; }
+function cors(hostsStr) {
     return function (req, res, next) {
-        var knownHosts = process.env.KNOWN_HOSTS || '';
-        var hosts = knownHosts.replace(/\s/g, '').split(',');
+        var hosts = parseHosts(hostsStr);
         var origin = getOrigin(req.headers);
-        if (openCors || !origin) {
+        if (hosts.length === 0 || !origin) {
             setCors(res, '*');
             return next();
         }
@@ -22,6 +20,13 @@ function cors(openCors) {
     };
 }
 exports["default"] = cors;
+function parseHosts(hosts) {
+    if (Array.isArray(hosts))
+        return hosts;
+    if (typeof hosts === 'string')
+        return hosts.replace(/\s/g, '').split(',');
+    return [];
+}
 function getOrigin(headers) {
     return headers.origin || '';
 }

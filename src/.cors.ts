@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 
-export default function cors(openCors = false) {
+export default function cors(hostsStr) {
   return (req: Request, res: Response, next: NextFunction) => {
-    const knownHosts = process.env.KNOWN_HOSTS || ''
-    const hosts = knownHosts.replace(/\s/g, '').split(',')
+    const hosts = parseHosts(hostsStr)
     const origin: string = getOrigin(req.headers)
-    if (openCors || !origin) {
+    if (hosts.length === 0 || !origin) {
       setCors(res, '*')
       return next()
     }
@@ -18,6 +17,12 @@ export default function cors(openCors = false) {
     if (req.method !== 'OPTIONS') return next()
     return res.send()
   }
+}
+
+function parseHosts(hosts) {
+  if (Array.isArray(hosts)) return hosts
+  if (typeof hosts === 'string') return hosts.replace(/\s/g, '').split(',')
+  return []
 }
 
 function getOrigin(headers: any): string {
