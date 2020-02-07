@@ -31,7 +31,7 @@ function getOrigin(headers) {
     return headers.origin || '';
 }
 function setCors(res, origin) {
-    res.setHeader('Access-Control-Allow-Headers', 'access-control-allow-headers,cache,content-type');
+    res.setHeader('Access-Control-Allow-Headers', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,PUT');
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');
