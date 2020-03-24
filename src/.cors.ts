@@ -31,7 +31,7 @@ function getOrigin(headers: any): string {
 
 function setCors(res: Response, origin: string) {
   res.setHeader('Access-Control-Allow-Headers', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,PUT')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,PUT,OPTIONS,HEADERS')
   res.setHeader('Access-Control-Allow-Origin', origin)
   res.setHeader('Access-Control-Allow-Credentials', 'true')
 }
