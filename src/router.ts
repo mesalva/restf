@@ -52,7 +52,7 @@ export default class RestfRouter {
 
   private addMethod(httpMethod) {
     return (path: string, controllerMethod: string) => {
-      const [controllerName, methodName] = controllerMethod.split('@')
+      const [controllerName, methodName] = controllerMethod.split(/[@.]/)
       this.routes.push({ path, method: httpMethod, type: methodName })
       this.router[httpMethod](path, addMiddleware(controllerName, methodName, path))
       return this
