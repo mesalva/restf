@@ -74,7 +74,7 @@ export default class RestfServer {
     this.use(xss())
     this.use(hpp())
     this.use(rateLimit({ windowMs: tenMinutes, max: 100 }))
-    this.use(cors(this.options.hosts))
+    this.use(cors(this.options.allowHosts, this.options.allowHeaders))
   }
 
   private setContentMiddlewares() {

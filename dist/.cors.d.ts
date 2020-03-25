@@ -1,1 +1,1 @@
-export default function cors(hostsStr: any): (req: any, res: any, next: any) => any;
+export default function cors(hostsStr: any, allowHeaders: any): (req: any, res: any, next: any) => any;

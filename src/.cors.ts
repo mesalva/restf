@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-export default function cors(hostsStr) {
+export default function cors(hostsStr, allowHeaders) {
   return (req: Request, res: Response, next: NextFunction) => {
     const hosts = parseHosts(hostsStr)
     const origin: string = getOrigin(req.headers)
@@ -13,7 +13,7 @@ export default function cors(hostsStr) {
       res.status(403)
       return res.send()
     }
-    setCors(res, origin)
+    setCors(res, origin, allowHeaders)
     if (req.method !== 'OPTIONS') return next()
     return res.send()
   }
@@ -29,8 +29,8 @@ function getOrigin(headers: any): string {
   return headers.origin || ''
 }
 
-function setCors(res: Response, origin: string) {
-  res.setHeader('Access-Control-Allow-Headers', '*')
+function setCors(res: Response, origin: string, allowHeaders: string = '*') {
+  res.setHeader('Access-Control-Allow-Headers', allowHeaders)
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,PUT,OPTIONS,HEADERS')
   res.setHeader('Access-Control-Allow-Origin', origin)
   res.setHeader('Access-Control-Allow-Credentials', 'true')

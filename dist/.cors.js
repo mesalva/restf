@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-function cors(hostsStr) {
+function cors(hostsStr, allowHeaders) {
     return function (req, res, next) {
         var hosts = parseHosts(hostsStr);
         var origin = getOrigin(req.headers);
@@ -13,7 +13,7 @@ function cors(hostsStr) {
             res.status(403);
             return res.send();
         }
-        setCors(res, origin);
+        setCors(res, origin, allowHeaders);
         if (req.method !== 'OPTIONS')
             return next();
         return res.send();
@@ -30,8 +30,9 @@ function parseHosts(hosts) {
 function getOrigin(headers) {
     return headers.origin || '';
 }
-function setCors(res, origin) {
-    res.setHeader('Access-Control-Allow-Headers', '*');
+function setCors(res, origin, allowHeaders) {
+    if (allowHeaders === void 0) { allowHeaders = '*'; }
+    res.setHeader('Access-Control-Allow-Headers', allowHeaders);
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,DELETE,PUT,OPTIONS,HEADERS');
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Credentials', 'true');

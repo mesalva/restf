@@ -72,7 +72,7 @@ var RestfServer = /** @class */ (function () {
         this.use(xss());
         this.use(hpp());
         this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
-        this.use(_cors_1["default"](this.options.hosts));
+        this.use(_cors_1["default"](this.options.allowHosts, this.options.allowHeaders));
     };
     RestfServer.prototype.setContentMiddlewares = function () {
         this.use(express.json());
