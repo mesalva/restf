@@ -5,6 +5,9 @@ export default class RestfModel {
 
   constructor(table: string) {
     this.db = database(table)
+    this.db.raw = async (query: string, options: any[] = []) => {
+      return database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
+    }
   }
 
   all() {

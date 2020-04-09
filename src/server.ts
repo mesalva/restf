@@ -13,7 +13,7 @@ import cors from './.cors'
 // @ts-ignore
 import * as xss from 'xss-clean'
 
-if (fs.existsSync('./config/.env')) dotenv.config({ path: './config/.env' })
+if (fs.existsSync('./.env')) dotenv.config({ path: './.env' })
 if (fs.existsSync('./config/config.env')) dotenv.config({ path: './config/config.env' })
 
 const PORT: string = process.env.PORT || '5000'

@@ -13,8 +13,8 @@ var dotenv = require("dotenv");
 var _cors_1 = require("./.cors");
 // @ts-ignore
 var xss = require("xss-clean");
-if (fs.existsSync('./config/.env'))
-    dotenv.config({ path: './config/.env' });
+if (fs.existsSync('./.env'))
+    dotenv.config({ path: './.env' });
 if (fs.existsSync('./config/config.env'))
     dotenv.config({ path: './config/config.env' });
 var PORT = process.env.PORT || '5000';

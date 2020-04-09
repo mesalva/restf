@@ -1,7 +1,7 @@
 {
   "name": "restf",
-  "version": "2.6.0",
-  "description": "A RESTFull api blue print",
+  "version": "2.6.2",
+  "description": "A RESTFull api framework",
   "main": "router.js",
   "scripts": {
     "build": "gulp",
