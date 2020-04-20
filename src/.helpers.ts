@@ -2,12 +2,18 @@ import { Request, Response } from 'express'
 
 export function addMiddleware(controllerName: string, controllerMethod: string, path: string) {
   return (req: Request | any, res: Response) => {
-    const controllerInstance = new req.AllControllers[controllerName](req, res)
-    const result = controllerInstance.run(controllerMethod, ...middlewareParams(path, req))
+    try {
+      const controllerInstance = new req.AllControllers[controllerName](req, res)
+      const result = controllerInstance.run(controllerMethod, ...middlewareParams(path, req))
 
-    if (controllerInstance.sent) return result
-    if (!isPromise(result)) return controllerInstance.respondWith(result)
-    return result.then((r: any) => controllerInstance.respondWith(r)).catch(handleError(controllerInstance))
+      if (controllerInstance.sent) return result
+      if (!isPromise(result)) return controllerInstance.respondWith(result)
+      return result.then((r: any) => controllerInstance.respondWith(r)).catch(handleError(controllerInstance))
+    } catch (e) {
+      console.log(e)
+      res.status(500)
+      res.send('')
+    }
   }
 }
 

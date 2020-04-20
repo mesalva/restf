@@ -1,4 +1,5 @@
 export default class RestfModel {
+    protected table: string;
     db: any;
     constructor(table: string);
     all(): any;

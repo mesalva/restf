@@ -3,10 +3,21 @@ import database from './.database'
 export default class RestfModel {
   db: any
 
-  constructor(table: string) {
+  constructor(protected table: string) {
     this.db = database(table)
     this.db.raw = async (query: string, options: any[] = []) => {
       return database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
+    }
+    this.db.insertReturning = (content, ...returns) => {
+      return this.db
+        .insert(content)
+        .returning('id')
+        .then(([id]) => id)
+        .then(id =>
+          database(table)
+            .where({ id })
+            .first(...returns)
+        )
     }
   }
 

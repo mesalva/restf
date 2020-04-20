@@ -51,6 +51,7 @@ var _database_1 = require("./.database");
 var RestfModel = /** @class */ (function () {
     function RestfModel(table) {
         var _this = this;
+        this.table = table;
         this.db = _database_1["default"](table);
         this.db.raw = function (query, options) {
             if (options === void 0) { options = []; }
@@ -61,6 +62,24 @@ var RestfModel = /** @class */ (function () {
                             return rows;
                         })];
                 });
+            });
+        };
+        this.db.insertReturning = function (content) {
+            var returns = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                returns[_i - 1] = arguments[_i];
+            }
+            return _this.db
+                .insert(content)
+                .returning('id')
+                .then(function (_a) {
+                var id = _a[0];
+                return id;
+            })
+                .then(function (id) {
+                var _a;
+                return (_a = _database_1["default"](table)
+                    .where({ id: id })).first.apply(_a, returns);
             });
         };
     }

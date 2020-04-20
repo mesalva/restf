@@ -9,13 +9,20 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 exports.__esModule = true;
 function addMiddleware(controllerName, controllerMethod, path) {
     return function (req, res) {
-        var controllerInstance = new req.AllControllers[controllerName](req, res);
-        var result = controllerInstance.run.apply(controllerInstance, __spreadArrays([controllerMethod], middlewareParams(path, req)));
-        if (controllerInstance.sent)
-            return result;
-        if (!isPromise(result))
-            return controllerInstance.respondWith(result);
-        return result.then(function (r) { return controllerInstance.respondWith(r); })["catch"](handleError(controllerInstance));
+        try {
+            var controllerInstance_1 = new req.AllControllers[controllerName](req, res);
+            var result = controllerInstance_1.run.apply(controllerInstance_1, __spreadArrays([controllerMethod], middlewareParams(path, req)));
+            if (controllerInstance_1.sent)
+                return result;
+            if (!isPromise(result))
+                return controllerInstance_1.respondWith(result);
+            return result.then(function (r) { return controllerInstance_1.respondWith(r); })["catch"](handleError(controllerInstance_1));
+        }
+        catch (e) {
+            console.log(e);
+            res.status(500);
+            res.send('');
+        }
     };
 }
 exports.addMiddleware = addMiddleware;
