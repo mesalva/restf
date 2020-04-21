@@ -1,14 +1,17 @@
 {
   "name": "restf",
-  "version": "2.6.3",
+  "version": "3.0.0",
   "description": "A RESTFull api framework",
   "main": "router.js",
+  "author": "Andre Antunes Vieira",
+  "license": "MIT",
   "scripts": {
     "build": "gulp",
     "test": "jest"
   },
-  "author": "Andre Antunes Vieira",
-  "license": "MIT",
+  "bin": {
+    "restf": "cli.js"
+  },
   "dependencies": {
     "colors": "^1.4.0",
     "cookie-parser": "^1.4.4",
