@@ -7,15 +7,20 @@ if (args[0] === 'dev')
     devCommand();
 if (args[0] === 'build')
     buildCommand();
+if (args[0] === 'build-dev')
+    buildDevCommand();
 if (args[0] === 'start')
     startCommand();
 function buildCommand() {
-    _bin_1.declareModels('dist');
     _bin_1.declareControllers('dist', args[1]);
+    _bin_1.declareModels('dist');
+}
+function buildDevCommand() {
+    _bin_1.declareControllers();
+    _bin_1.declareModels();
 }
 function devCommand() {
-    _bin_1.declareModels();
-    _bin_1.declareControllers();
+    buildDevCommand();
     var spawn = require('child_process').spawn;
     var command = spawn('ts-node', ['src/server.ts']);
     command.stdout.setEncoding('utf8');

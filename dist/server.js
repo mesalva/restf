@@ -81,7 +81,12 @@ var RestfServer = /** @class */ (function () {
     };
     RestfServer.prototype.setControllersMiddleware = function () {
         this.use(function (req, _res, next) {
-            req.AllControllers = require('./.allControllers');
+            try {
+                req.AllControllers = require('./.allControllers');
+            }
+            catch (e) {
+                console.log('error to require .allControllers');
+            }
             next();
         });
     };

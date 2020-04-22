@@ -85,7 +85,12 @@ export default class RestfServer {
 
   private setControllersMiddleware() {
     this.use((req, _res, next) => {
-      req.AllControllers = require('./.allControllers')
+      try{
+        req.AllControllers = require('./.allControllers')
+      }
+      catch (e) {
+       console.log('error to require .allControllers')
+      }
       next()
     })
   }

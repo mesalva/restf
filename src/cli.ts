@@ -5,16 +5,21 @@ const [, , ...args] = process.argv
 
 if (args[0] === 'dev') devCommand()
 if (args[0] === 'build') buildCommand()
+if (args[0] === 'build-dev') buildDevCommand()
 if (args[0] === 'start') startCommand()
 
 function buildCommand() {
-  declareModels('dist')
   declareControllers('dist', args[1])
+  declareModels('dist')
+}
+
+function buildDevCommand() {
+  declareControllers()
+  declareModels()
 }
 
 function devCommand() {
-  declareModels()
-  declareControllers()
+  buildDevCommand()
   const spawn = require('child_process').spawn
   const command = spawn('ts-node', ['src/server.ts'])
   command.stdout.setEncoding('utf8')

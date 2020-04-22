@@ -2,10 +2,14 @@ import * as fs from 'fs'
 
 export function declareControllers(folderPath = 'src', repoPath = undefined) {
   if (!repoPath) repoPath = process.cwd()
-  const controllersFolderPath = `${process.cwd()}/${folderPath}/controllers`
+  let controllersFolderPath = `${process.cwd()}/${folderPath}/controllers`
+  if (controllersFolderPath.match(/node_modules\/restf/))
+    controllersFolderPath = controllersFolderPath.replace('node_modules/restf/', '')
   if (!fs.existsSync(controllersFolderPath)) {
-    return fs.writeFileSync(`${repoPath}/node_modules/restf/.allControllers.js`, 'module.exports = {}')
+    console.log('install .allControllers 1, do not exists', controllersFolderPath)
+    return fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, 'module.exports = {}')
   }
+  console.log('install .allControllers 2')
   const files = fs
     .readdirSync(controllersFolderPath)
     .filter(file => file.match(/^[A-Z].*\.[tj]s$/))
@@ -18,7 +22,11 @@ export function declareControllers(folderPath = 'src', repoPath = undefined) {
   fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, content)
 }
 export function declareModels(folderPath = 'src') {
-  const path = name => `${process.cwd()}/${folderPath}/${name}`
+  const path = name => {
+    let str = `${process.cwd()}/${folderPath}/${name}`
+    if (str.match(/node_modules\/restf/)) str = str.replace('node_modules/restf/', '')
+    return str
+  }
   const doNotExists = name => !fs.existsSync(path(name))
   if (doNotExists(`controllers`) || doNotExists(`models`)) return null
   const files = fs
