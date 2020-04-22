@@ -6,7 +6,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var RestfController = /** @class */ (function () {
     function RestfController(req, res) {
         this.currentMethod = 'undefined';
@@ -43,9 +43,8 @@ var RestfController = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             a[_i] = arguments[_i];
         }
-        // @ts-ignore
-        var Serializer = this.constructor.serializer;
-        // @ts-ignore
+        var constructor = this.constructor;
+        var Serializer = constructor.serializer;
         if (!Serializer)
             return null;
         var currentMethod = this.currentMethod;
@@ -79,7 +78,7 @@ var RestfController = /** @class */ (function () {
     RestfController.serialize = undefined;
     return RestfController;
 }());
-exports["default"] = RestfController;
+exports.default = RestfController;
 function objectFilter(obj, fields) {
     return fields.reduce(function (result, field) {
         if (obj[field])

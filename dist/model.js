@@ -46,18 +46,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var _database_1 = require("./.database");
 var RestfModel = /** @class */ (function () {
     function RestfModel(table) {
         var _this = this;
         this.table = table;
-        this.db = _database_1["default"](table);
+        this.db = _database_1.default(table);
         this.db.raw = function (query, options) {
             if (options === void 0) { options = []; }
             return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, _database_1["default"].raw(query.replace(/\n/g, ' '), options).then(function (_a) {
+                    return [2 /*return*/, _database_1.default.raw(query.replace(/\n/g, ' '), options).then(function (_a) {
                             var rows = _a.rows;
                             return rows;
                         })];
@@ -78,7 +78,7 @@ var RestfModel = /** @class */ (function () {
             })
                 .then(function (id) {
                 var _a;
-                return (_a = _database_1["default"](table)
+                return (_a = _database_1.default(table)
                     .where({ id: id })).first.apply(_a, returns);
             });
         };
@@ -114,9 +114,10 @@ var RestfModel = /** @class */ (function () {
             return db;
         return db.where(whereClause);
     };
-    RestfModel.prototype["delete"] = function (id) {
+    RestfModel.prototype.delete = function (id) {
         return this.db
-            .where({ id: id })["delete"]()
+            .where({ id: id })
+            .delete()
             .then(function () { return ({ id: id }); });
     };
     RestfModel.newDefaultData = function (data) {
@@ -124,4 +125,4 @@ var RestfModel = /** @class */ (function () {
     };
     return RestfModel;
 }());
-exports["default"] = RestfModel;
+exports.default = RestfModel;

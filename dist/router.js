@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var _routeDocsRender_1 = require("./.routeDocsRender");
 var _routeController_1 = require("./.routeController");
@@ -10,13 +10,13 @@ var RestfRouter = /** @class */ (function () {
         this.routes = [];
         this.get = this.addMethod('get');
         this.post = this.addMethod('post');
-        this["delete"] = this.addMethod('delete');
+        this.delete = this.addMethod('delete');
         this.update = this.addMethod('update');
     }
     RestfRouter.prototype.resources = function (endpoint, Controller) {
-        var router = new _routeController_1["default"](Controller);
+        var router = new _routeController_1.default(Controller);
         var routeReport = { path: endpoint, type: 'resources', subRoutes: [] };
-        var methods = _routeController_1["default"].resourcesMethods(Controller);
+        var methods = _routeController_1.default.resourcesMethods(Controller);
         var addRoute = function (path, type, method) {
             if (!methods[type])
                 return null;
@@ -34,7 +34,7 @@ var RestfRouter = /** @class */ (function () {
     };
     RestfRouter.prototype.docs = function (path) {
         var _this = this;
-        this.router.get(path, function (req, res) { return new _routeDocsRender_1["default"](req, res).render(_this.routes); });
+        this.router.get(path, function (req, res) { return new _routeDocsRender_1.default(req, res).render(_this.routes); });
     };
     RestfRouter.prototype.listen = function () {
         return this.router;
@@ -50,4 +50,4 @@ var RestfRouter = /** @class */ (function () {
     };
     return RestfRouter;
 }());
-exports["default"] = RestfRouter;
+exports.default = RestfRouter;

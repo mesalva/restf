@@ -4,7 +4,7 @@ const ts = require('gulp-typescript')
 
 function build() {
   return src(['src/**/*.ts', 'src/**/.*.ts'])
-    .pipe(ts({ declaration: true }))
+    .pipe(ts({ declaration: true, target: 'es5' }))
     .pipe(dest('dist'))
 }
 

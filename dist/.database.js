@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var knex = require("knex");
 //TODO add , "../.." when as lib
@@ -18,4 +18,4 @@ function getKnexfile() {
 }
 // @ts-ignore
 var database = knex(knexfile[environment]);
-exports["default"] = database;
+exports.default = database;

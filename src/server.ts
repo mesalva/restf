@@ -85,7 +85,7 @@ export default class RestfServer {
 
   private setControllersMiddleware() {
     this.use((req, _res, next) => {
-      req.AllControllers = require(`./.allControllers.js`)
+      req.AllControllers = require('./.allControllers')
       next()
     })
   }
@@ -102,6 +102,7 @@ export default class RestfServer {
     this.use((err: any, req: express.Request, res: express.Response, next: any) => {
       const error = err.message || 'Server Error'
       res.status(err.statusCode || 500)
+      console.log(err)
       res.json({ error })
       return next()
     })

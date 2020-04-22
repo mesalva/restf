@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 require("colors");
 var fs = require("fs");
 var path = require("path");
@@ -72,7 +72,7 @@ var RestfServer = /** @class */ (function () {
         this.use(xss());
         this.use(hpp());
         this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
-        this.use(_cors_1["default"](this.options.allowHosts, this.options.allowHeaders));
+        this.use(_cors_1.default(this.options.allowHosts, this.options.allowHeaders));
     };
     RestfServer.prototype.setContentMiddlewares = function () {
         this.use(express.json());
@@ -81,7 +81,7 @@ var RestfServer = /** @class */ (function () {
     };
     RestfServer.prototype.setControllersMiddleware = function () {
         this.use(function (req, _res, next) {
-            req.AllControllers = require("./.allControllers.js");
+            req.AllControllers = require('./.allControllers');
             next();
         });
     };
@@ -96,6 +96,7 @@ var RestfServer = /** @class */ (function () {
         this.use(function (err, req, res, next) {
             var error = err.message || 'Server Error';
             res.status(err.statusCode || 500);
+            console.log(err);
             res.json({ error: error });
             return next();
         });
@@ -107,4 +108,4 @@ var RestfServer = /** @class */ (function () {
     };
     return RestfServer;
 }());
-exports["default"] = RestfServer;
+exports.default = RestfServer;

@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 function cors(hostsStr, allowHeaders) {
     return function (req, res, next) {
         var hosts = parseHosts(hostsStr);
@@ -19,7 +19,7 @@ function cors(hostsStr, allowHeaders) {
         return res.send();
     };
 }
-exports["default"] = cors;
+exports.default = cors;
 function parseHosts(hosts) {
     if (Array.isArray(hosts))
         return hosts;

@@ -18,7 +18,7 @@ export default class RestfController {
     this.res = res
   }
 
-  public run(method: string, ...args){
+  public run(method: string, ...args) {
     this.currentMethod = method
     return this[method](...args)
   }
@@ -38,11 +38,10 @@ export default class RestfController {
     return this.res.send()
   }
 
-  protected serialize(...a: any[]){
-    // @ts-ignore
-    const Serializer = this.constructor.serializer
-    // @ts-ignore
-    if(!Serializer) return null
+  protected serialize(...a: any[]) {
+    const constructor: any = this.constructor
+    const Serializer: any = constructor.serializer
+    if (!Serializer) return null
     const currentMethod = this.currentMethod
     return new Serializer(this)[currentMethod](...a)
   }

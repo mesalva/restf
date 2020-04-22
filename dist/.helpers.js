@@ -6,7 +6,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 function addMiddleware(controllerName, controllerMethod, path) {
     return function (req, res) {
         try {
@@ -16,7 +16,7 @@ function addMiddleware(controllerName, controllerMethod, path) {
                 return result;
             if (!isPromise(result))
                 return controllerInstance_1.respondWith(result);
-            return result.then(function (r) { return controllerInstance_1.respondWith(r); })["catch"](handleError(controllerInstance_1));
+            return result.then(function (r) { return controllerInstance_1.respondWith(r); }).catch(handleError(controllerInstance_1));
         }
         catch (e) {
             console.log(e);

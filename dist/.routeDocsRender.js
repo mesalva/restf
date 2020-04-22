@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var RouteDocsRender = /** @class */ (function () {
     function RouteDocsRender(req, res) {
         var _this = this;
@@ -24,4 +24,4 @@ var RouteDocsRender = /** @class */ (function () {
     };
     return RouteDocsRender;
 }());
-exports["default"] = RouteDocsRender;
+exports.default = RouteDocsRender;

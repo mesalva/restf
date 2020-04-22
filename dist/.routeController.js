@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var _helpers_1 = require("./.helpers");
 var RouteController = /** @class */ (function () {
@@ -20,7 +20,7 @@ var RouteController = /** @class */ (function () {
     RouteController.prototype.put = function (path, controllerMethod) {
         return this.addRoute(path, 'put', controllerMethod);
     };
-    RouteController.prototype["delete"] = function (path, controllerMethod) {
+    RouteController.prototype.delete = function (path, controllerMethod) {
         return this.addRoute(path, 'delete', controllerMethod);
     };
     RouteController.prototype.listen = function () {
@@ -35,4 +35,4 @@ var RouteController = /** @class */ (function () {
     };
     return RouteController;
 }());
-exports["default"] = RouteController;
+exports.default = RouteController;

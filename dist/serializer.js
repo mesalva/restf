@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var RestfSerializer = /** @class */ (function () {
     function RestfSerializer(controller) {
         if (controller === void 0) { controller = undefined; }
@@ -41,4 +41,4 @@ var RestfSerializer = /** @class */ (function () {
     };
     return RestfSerializer;
 }());
-exports["default"] = RestfSerializer;
+exports.default = RestfSerializer;
