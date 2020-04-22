@@ -18,18 +18,19 @@ export function declareControllers(folderPath = 'src', repoPath = undefined) {
   fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, content)
 }
 export function declareModels(folderPath = 'src') {
-  const controllersFolderPath = `${process.cwd()}/${folderPath}/controllers`
-  if (!fs.existsSync(controllersFolderPath)) {
-    return fs.writeFileSync(
-      `${controllersFolderPath}/.models.ts`,
-      `import RestfModel from 'restf/model'\n\nexport default class _Model extends RestfModel {\n}\n`
-    )
-  }
+  const path = name => `${process.cwd()}/${folderPath}/${name}`
+  const doNotExists = name => !fs.existsSync(path(name))
+  if (doNotExists(`controllers`) || doNotExists(`models`)) return null
   const files = fs
-    .readdirSync(`${process.cwd()}/${folderPath}/models`)
+    .readdirSync(path('models'))
     .filter(file => file.match(/[A-Z].*\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
     .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/))
+  let content = mountDeclareModelsContent(files)
+  return fs.writeFileSync(`${path('controllers')}/.RestfControllerWithModels.ts`, content)
+}
+
+function mountDeclareModelsContent(files) {
   let content = `//######################################\n`
   content += '// This file is generated automatically,\n'
   content += "// Don't modify this file\n"
@@ -43,6 +44,5 @@ export function declareModels(folderPath = 'src') {
   content += files
     .map(model => `  public get ${model}() {\n    return new ${model}(this.modelCredentials)\n  }`)
     .join('\n')
-  content += '\n}\n'
-  return fs.writeFileSync(`${controllersFolderPath}/.RestfControllerWithModels.ts`, content)
+  return content + '\n}\n'
 }
