@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "3.0.9-rc.3",
+  "version": "3.0.11",
   "description": "A RESTFull api framework",
   "main": "router.js",
   "author": "Andre Antunes Vieira",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "gulp",
     "test": "jest",
-    "postinstall": "restf build-dev"
+    "postinstall": "npm run restf build-dev"
   },
   "bin": {
     "restf": "cli.js"

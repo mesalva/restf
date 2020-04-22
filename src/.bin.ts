@@ -1,37 +1,33 @@
 import * as fs from 'fs'
 
-export function declareControllers(folderPath = 'src', repoPath = undefined) {
-  if (!repoPath) repoPath = process.cwd()
-  let controllersFolderPath = `${process.cwd()}/${folderPath}/controllers`
-  if (controllersFolderPath.match(/node_modules\/restf/))
-    controllersFolderPath = controllersFolderPath.replace('node_modules/restf/', '')
+let projectPath = `${process.cwd()}`
+if (projectPath.match(/node_modules\/restf/)) projectPath = projectPath.replace('/node_modules/restf', '')
+
+export function declareControllers(folderPath = 'src', repoPath = projectPath) {
+  let controllersFolderPath = `${projectPath}/${folderPath}/controllers`
   if (!fs.existsSync(controllersFolderPath)) {
-    console.log('install .allControllers 1, do not exists', controllersFolderPath)
-    return fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, 'module.exports = {}')
+    return fs.writeFileSync(`${projectPath}/node_modules/restf/.allControllers.js`, 'module.exports = {}')
   }
-  console.log('install .allControllers 2')
   const files = fs
     .readdirSync(controllersFolderPath)
     .filter(file => file.match(/^[A-Z].*\.[tj]s$/))
+    .filter(file => !file.match(/\.d\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
   let content = 'module.exports = {\n'
   content += files
     .map(controller => `  ${controller}: require('${repoPath}/${folderPath}/controllers/${controller}').default,`)
     .join('\n')
   content += '\n}'
-  fs.writeFileSync(`${process.cwd()}/node_modules/restf/.allControllers.js`, content)
+  fs.writeFileSync(`${projectPath}/node_modules/restf/.allControllers.js`, content)
 }
 export function declareModels(folderPath = 'src') {
-  const path = name => {
-    let str = `${process.cwd()}/${folderPath}/${name}`
-    if (str.match(/node_modules\/restf/)) str = str.replace('node_modules/restf/', '')
-    return str
-  }
+  const path = name => `${projectPath}/${folderPath}/${name}`
   const doNotExists = name => !fs.existsSync(path(name))
   if (doNotExists(`controllers`) || doNotExists(`models`)) return null
   const files = fs
     .readdirSync(path('models'))
     .filter(file => file.match(/[A-Z].*\.[tj]s$/))
+    .filter(file => !file.match(/\.d\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
     .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/))
   let content = mountDeclareModelsContent(files)
