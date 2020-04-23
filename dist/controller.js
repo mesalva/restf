@@ -7,6 +7,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var jsonwebtoken_1 = require("jsonwebtoken");
 var RestfController = /** @class */ (function () {
     function RestfController(req, res) {
         this.currentMethod = 'undefined';
@@ -36,6 +37,27 @@ var RestfController = /** @class */ (function () {
         this.sent = true;
         this.res.status(204);
         return this.res.send();
+    };
+    Object.defineProperty(RestfController.prototype, "currentUser", {
+        get: function () {
+            if (this.req.credentials)
+                return this.req.credentials;
+            var authorization = this.req.cookies.token || this.req.headers.authorization;
+            if (!authorization)
+                return null;
+            var token = authorization.replace(/bearer( +)?/i, '');
+            if (!token)
+                return null;
+            this.req.credentials = this.tokenToCredentials(token);
+            Object.defineProperty(this.req.credentials, 'iat', { enumerable: false });
+            Object.defineProperty(this.req.credentials, 'exp', { enumerable: false });
+            return this.req.credentials;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RestfController.prototype.tokenToCredentials = function (token) {
+        return jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || '');
     };
     RestfController.prototype.serialize = function () {
         var _a;

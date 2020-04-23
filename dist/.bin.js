@@ -48,11 +48,6 @@ function mountDeclareModelsContent(files) {
     content += "import RestfController from 'restf/controller'\n";
     content += files.map(function (model) { return "import " + model + " from '../models/" + model + "'"; }).join('\n');
     content += '\n\nexport default class RestfControllerWithModels extends RestfController {\n';
-    content += "  private get modelCredentials() {\n";
-    content += "    return this.req.credentials || {}\n";
-    content += '  }\n';
-    content += files
-        .map(function (model) { return "  public get " + model + "() {\n    return new " + model + "(this.modelCredentials)\n  }"; })
-        .join('\n');
+    content += files.map(function (model) { return "  public get " + model + "() {\n    return new " + model + "(this.currentUser)\n  }"; }).join('\n');
     return content + '\n}\n';
 }

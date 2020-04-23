@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "3.0.11",
+  "version": "3.0.14",
   "description": "A RESTFull api framework",
   "main": "router.js",
   "author": "Andre Antunes Vieira",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "gulp",
     "test": "jest",
-    "postinstall": "npm run restf build-dev"
+    "postinstall": "node cli build-dev"
   },
   "bin": {
     "restf": "cli.js"
@@ -22,6 +22,7 @@
     "express-rate-limit": "^5.0.0",
     "helmet": "^3.21.2",
     "hpp": "^0.2.2",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.1",
     "xss-clean": "^0.1.1"
   },

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import jwt from 'jsonwebtoken'
 
 interface ControllerOptions {
   status?: number
@@ -36,6 +37,22 @@ export default class RestfController {
     this.sent = true
     this.res.status(204)
     return this.res.send()
+  }
+
+  protected get currentUser() {
+    if (this.req.credentials) return this.req.credentials
+    const authorization = this.req.cookies.token || this.req.headers.authorization
+    if (!authorization) return null
+    const token = authorization.replace(/bearer( +)?/i, '')
+    if (!token) return null
+    this.req.credentials = this.tokenToCredentials(token)
+    Object.defineProperty(this.req.credentials, 'iat', { enumerable: false })
+    Object.defineProperty(this.req.credentials, 'exp', { enumerable: false })
+    return this.req.credentials
+  }
+
+  protected tokenToCredentials(token: string){
+    return jwt.verify(token, process.env.JWT_SECRET || '')
   }
 
   protected serialize(...a: any[]) {

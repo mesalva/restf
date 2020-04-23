@@ -13,6 +13,8 @@ export default class RestfController {
     run(method: string, ...args: any[]): any;
     protected status(code: number): this;
     protected respondWith(data: any, options?: ControllerOptions): any;
+    protected get currentUser(): any;
+    protected tokenToCredentials(token: string): any;
     protected serialize(...a: any[]): any;
     private sendWithMiddlewares;
     params(...permit: Array<string>): any;
