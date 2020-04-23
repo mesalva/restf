@@ -28,7 +28,7 @@ function devCommand() {
 }
 function startCommand() {
     var spawn = require('child_process').spawn;
-    var command = spawn('node', ['dist/server.ts']);
+    var command = spawn('node', ['dist/server.js']);
     command.stdout.setEncoding('utf8');
     command.stdout.on('data', function (data) { return process.stdout.write(data); });
 }

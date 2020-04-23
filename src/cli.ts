@@ -28,7 +28,7 @@ function devCommand() {
 
 function startCommand() {
   const spawn = require('child_process').spawn
-  const command = spawn('node', ['dist/server.ts'])
+  const command = spawn('node', ['dist/server.js'])
   command.stdout.setEncoding('utf8')
   command.stdout.on('data', data => process.stdout.write(data))
 }

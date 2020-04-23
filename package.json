@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "3.0.14",
+  "version": "3.0.15",
   "description": "A RESTFull api framework",
   "main": "router.js",
   "author": "Andre Antunes Vieira",
