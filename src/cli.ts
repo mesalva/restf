@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import * as fs from 'fs'
 import { declareControllers, declareModels } from './.bin'
 
 const [, , ...args] = process.argv
@@ -9,8 +10,21 @@ if (args[0] === 'build-dev') buildDevCommand()
 if (args[0] === 'start') startCommand()
 
 function buildCommand() {
-  declareControllers('dist', args[1])
-  declareModels('dist')
+  const { spawn } = require('child_process')
+  fs.exists('./gulpfile.js', exists => {
+    if (!exists) {
+      declareControllers('dist', args[1])
+      return declareModels('dist')
+    }
+    const command = spawn('gulp', ['build'])
+    command.stdout.setEncoding('utf8')
+    process.stdout.write('Running project build\n')
+    command.stdout.on('data', data => process.stdout.write(data))
+    command.stdout.on('end', () => {
+      declareControllers('dist', args[1])
+      declareModels('dist')
+    })
+  })
 }
 
 function buildDevCommand() {
