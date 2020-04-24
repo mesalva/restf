@@ -11,19 +11,14 @@ if (args[0] === 'start') startCommand()
 
 function buildCommand() {
   const { spawn } = require('child_process')
-  fs.exists('./gulpfile.js', exists => {
-    if (!exists) {
-      declareControllers('dist', args[1])
-      return declareModels('dist')
-    }
-    const command = spawn('gulp', ['build'])
-    command.stdout.setEncoding('utf8')
-    process.stdout.write('Running project build\n')
-    command.stdout.on('data', data => process.stdout.write(data))
-    command.stdout.on('end', () => {
-      declareControllers('dist', args[1])
-      declareModels('dist')
-    })
+
+  const command = spawn('gulp', ['build'])
+  command.stdout.setEncoding('utf8')
+  process.stdout.write('Running project build\n')
+  command.stdout.on('data', data => process.stdout.write(data))
+  command.stdout.on('end', () => {
+    declareControllers('dist', args[1])
+    declareModels('dist')
   })
 }
 

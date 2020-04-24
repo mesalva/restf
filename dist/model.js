@@ -53,7 +53,7 @@ var RestfModel = /** @class */ (function () {
         var _this = this;
         this.table = table;
         this.db = _database_1.default(table);
-        this.db.raw = function (query, options) {
+        this.db.constructor.prototype.raw = function (query, options) {
             if (options === void 0) { options = []; }
             return __awaiter(_this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
@@ -64,7 +64,23 @@ var RestfModel = /** @class */ (function () {
                 });
             });
         };
-        this.db.insertReturning = function (content) {
+        this.db.constructor.prototype.firstParsed = function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return (_a = _this.db).first.apply(_a, args).then(parseSingle);
+        };
+        this.db.constructor.prototype.selectParsed = function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return (_a = _this.db).select.apply(_a, args).then(parseMulti);
+        };
+        this.db.constructor.insertReturning = function (content) {
             var returns = [];
             for (var _i = 1; _i < arguments.length; _i++) {
                 returns[_i - 1] = arguments[_i];
@@ -126,3 +142,25 @@ var RestfModel = /** @class */ (function () {
     return RestfModel;
 }());
 exports.default = RestfModel;
+function parseSingle(data) {
+    if (!data)
+        return data;
+    var data2 = {};
+    for (var field in data) {
+        if (field.match('_')) {
+            var _a = field.split('_'), name_1 = _a[0], subName = _a[1];
+            if (!data2[name_1])
+                data2[name_1] = {};
+            data2[name_1][subName] = data[field];
+        }
+        else {
+            data2[field] = data[field];
+        }
+    }
+    return data2;
+}
+function parseMulti(data) {
+    if (!data)
+        return data;
+    return data.map(parseSingle);
+}

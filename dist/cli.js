@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
 var _bin_1 = require("./.bin");
 var _a = process.argv, args = _a.slice(2);
 if (args[0] === 'dev')
@@ -14,18 +13,13 @@ if (args[0] === 'start')
     startCommand();
 function buildCommand() {
     var spawn = require('child_process').spawn;
-    fs.exists('./gulpfile.js', function (exists) {
-        if (!exists) {
-            _bin_1.declareControllers('dist', args[1]);
-            return _bin_1.declareModels('dist');
-        }
-        var command = spawn('gulp', ['build']);
-        command.stdout.setEncoding('utf8');
-        command.stdout.on('data', function (data) { return process.stdout.write(data); });
-        command.stdout.on('end', function () {
-            _bin_1.declareControllers('dist', args[1]);
-            _bin_1.declareModels('dist');
-        });
+    var command = spawn('gulp', ['build']);
+    command.stdout.setEncoding('utf8');
+    process.stdout.write('Running project build\n');
+    command.stdout.on('data', function (data) { return process.stdout.write(data); });
+    command.stdout.on('end', function () {
+        _bin_1.declareControllers('dist', args[1]);
+        _bin_1.declareModels('dist');
     });
 }
 function buildDevCommand() {

@@ -5,10 +5,16 @@ export default class RestfModel {
 
   constructor(protected table: string) {
     this.db = database(table)
-    this.db.raw = async (query: string, options: any[] = []) => {
+    this.db.constructor.prototype.raw = async (query: string, options: any[] = []) => {
       return database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
     }
-    this.db.insertReturning = (content, ...returns) => {
+    this.db.constructor.prototype.firstParsed = (...args) => {
+      return this.db.first(...args).then(parseSingle)
+    }
+    this.db.constructor.prototype.selectParsed = (...args) => {
+      return this.db.select(...args).then(parseMulti)
+    }
+    this.db.constructor.insertReturning = (content, ...returns) => {
       return this.db
         .insert(content)
         .returning('id')
@@ -66,4 +72,24 @@ export default class RestfModel {
   static newDefaultData(data: object) {
     return { ...data, createdAt: new Date() }
   }
+}
+
+function parseSingle(data) {
+  if (!data) return data
+  const data2: any = {}
+  for (let field in data) {
+    if (field.match('_')) {
+      const [name, subName] = field.split('_')
+      if (!data2[name]) data2[name] = {}
+      data2[name][subName] = data[field]
+    } else {
+      data2[field] = data[field]
+    }
+  }
+  return data2
+}
+
+function parseMulti(data) {
+  if (!data) return data
+  return data.map(parseSingle)
 }
