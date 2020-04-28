@@ -14,6 +14,12 @@ export default class RestfModel {
     this.db.constructor.prototype.selectParsed = (...args) => {
       return this.db.select(...args).then(parseMulti)
     }
+    this.db.constructor.prototype.innerJoinWithManyAnds = (table, ...args) => {
+      return this.db.innerJoin(table, function() {
+        const [a, b, c, d] = args
+        this.on(a, '=', b).andOn(c, '=', d)
+      })
+    }
     this.db.constructor.insertReturning = (content, ...returns) => {
       return this.db
         .insert(content)

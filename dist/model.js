@@ -80,6 +80,16 @@ var RestfModel = /** @class */ (function () {
             }
             return (_a = _this.db).select.apply(_a, args).then(parseMulti);
         };
+        this.db.constructor.prototype.innerJoinWithManyAnds = function (table) {
+            var args = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                args[_i - 1] = arguments[_i];
+            }
+            return _this.db.innerJoin(table, function () {
+                var a = args[0], b = args[1], c = args[2], d = args[3];
+                this.on(a, '=', b).andOn(c, '=', d);
+            });
+        };
         this.db.constructor.insertReturning = function (content) {
             var returns = [];
             for (var _i = 1; _i < arguments.length; _i++) {
