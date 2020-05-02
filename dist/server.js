@@ -7,7 +7,6 @@ var express = require("express");
 var fileupload = require("express-fileupload");
 var cookieParser = require("cookie-parser");
 var helmet = require("helmet");
-var rateLimit = require("express-rate-limit");
 var hpp = require("hpp");
 var dotenv = require("dotenv");
 var _cors_1 = require("./.cors");
@@ -71,7 +70,6 @@ var RestfServer = /** @class */ (function () {
         this.use(helmet());
         this.use(xss());
         this.use(hpp());
-        this.use(rateLimit({ windowMs: tenMinutes, max: 100 }));
         this.use(_cors_1.default(this.options.allowHosts, this.options.allowHeaders));
     };
     RestfServer.prototype.setContentMiddlewares = function () {

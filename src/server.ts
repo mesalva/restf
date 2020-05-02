@@ -5,7 +5,6 @@ import * as express from 'express'
 import * as fileupload from 'express-fileupload'
 import * as cookieParser from 'cookie-parser'
 import * as helmet from 'helmet'
-import * as rateLimit from 'express-rate-limit'
 import * as hpp from 'hpp'
 import * as dotenv from 'dotenv'
 import cors from './.cors'
@@ -73,7 +72,6 @@ export default class RestfServer {
     this.use(helmet())
     this.use(xss())
     this.use(hpp())
-    this.use(rateLimit({ windowMs: tenMinutes, max: 100 }))
     this.use(cors(this.options.allowHosts, this.options.allowHeaders))
   }
 
