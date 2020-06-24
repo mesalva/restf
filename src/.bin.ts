@@ -11,7 +11,7 @@ export function declareControllers(folderPath = 'src', repoPath = projectPath) {
   const files = fs
     .readdirSync(controllersFolderPath)
     .filter(file => file.match(/^[A-Z].*\.[tj]s$/))
-    .filter(file => !file.match(/\.d\.[tj]s$/))
+    .filter(file => !file.match(/\.(d|test|spec)\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
   let content = 'module.exports = {\n'
   content += files

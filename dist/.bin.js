@@ -14,7 +14,7 @@ function declareControllers(folderPath, repoPath) {
     var files = fs
         .readdirSync(controllersFolderPath)
         .filter(function (file) { return file.match(/^[A-Z].*\.[tj]s$/); })
-        .filter(function (file) { return !file.match(/\.d\.[tj]s$/); })
+        .filter(function (file) { return !file.match(/\.(d|test|spec)\.[tj]s$/); })
         .map(function (file) { return file.replace(/\.[tj]s$/, ''); });
     var content = 'module.exports = {\n';
     content += files
