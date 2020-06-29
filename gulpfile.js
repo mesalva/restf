@@ -3,7 +3,7 @@ const uglify = require('gulp-uglify-es').default
 const ts = require('gulp-typescript')
 
 function build() {
-  return src(['src/**/*.ts', 'src/**/.*.ts'])
+  return src(['src/**/*.ts', 'src/**/.*.ts', '!src/**/*.spec.ts', '!src/**/*.test.ts'])
     .pipe(ts({ declaration: true, target: 'es5' }))
     .pipe(dest('dist'))
 }

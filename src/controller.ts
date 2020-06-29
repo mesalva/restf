@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import Cache from './cache'
 
 interface ControllerOptions {
   status?: number
@@ -14,9 +15,17 @@ export default class RestfController {
 
   protected static serialize = undefined
 
-  constructor(req: Request | any, res: Response | any) {
+  constructor(req?: Request | any, res?: Response | any) {
     this.req = req
     this.res = res
+  }
+
+  protected cached(path: string, method: Function) {
+    return new Cache().use(path, method)
+  }
+
+  protected clearCache(path: string) {
+    return new Cache().clear(path)
   }
 
   public run(method: string, ...args) {
@@ -29,10 +38,13 @@ export default class RestfController {
     return this
   }
 
-  protected respondWith(data: any, options: ControllerOptions = {}) {
+  protected respondWith(data: any = {}, options: ControllerOptions = {}) {
     if (this.sent) return null
-    if (options.status) this.res.status(options.status)
-    if (options.status || data) return this.sendWithMiddlewares(data)
+    if (options.status || data.statusCode) {
+      this.res.status(options.status || data.statusCode)
+      delete data.statusCode
+    }
+    if (options.status || Object.keys(data).length > 0) return this.sendWithMiddlewares(data)
 
     this.sent = true
     this.res.status(204)
@@ -51,7 +63,7 @@ export default class RestfController {
     return this.req.credentials
   }
 
-  protected tokenToCredentials(token: string){
+  protected tokenToCredentials(token: string) {
     return jwt.verify(token, process.env.JWT_SECRET || '')
   }
 
@@ -78,6 +90,18 @@ export default class RestfController {
     if (controllerPermit) permit = [...controllerPermit, ...permit]
     if (permit.length === 0) return this.req.body
     return objectFilter(this.req.body, permit)
+  }
+
+  get routeParams() {
+    return this.req.params || {}
+  }
+
+  get queryParams() {
+    return this.req.query || {}
+  }
+
+  get body() {
+    return this.req.body || {}
   }
 }
 

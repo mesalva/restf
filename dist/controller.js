@@ -8,12 +8,19 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var jsonwebtoken_1 = require("jsonwebtoken");
+var cache_1 = require("./cache");
 var RestfController = /** @class */ (function () {
     function RestfController(req, res) {
         this.currentMethod = 'undefined';
         this.req = req;
         this.res = res;
     }
+    RestfController.prototype.cached = function (path, method) {
+        return new cache_1.default().use(path, method);
+    };
+    RestfController.prototype.clearCache = function (path) {
+        return new cache_1.default().clear(path);
+    };
     RestfController.prototype.run = function (method) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -27,12 +34,15 @@ var RestfController = /** @class */ (function () {
         return this;
     };
     RestfController.prototype.respondWith = function (data, options) {
+        if (data === void 0) { data = {}; }
         if (options === void 0) { options = {}; }
         if (this.sent)
             return null;
-        if (options.status)
-            this.res.status(options.status);
-        if (options.status || data)
+        if (options.status || data.statusCode) {
+            this.res.status(options.status || data.statusCode);
+            delete data.statusCode;
+        }
+        if (options.status || Object.keys(data).length > 0)
             return this.sendWithMiddlewares(data);
         this.sent = true;
         this.res.status(204);
@@ -97,6 +107,27 @@ var RestfController = /** @class */ (function () {
             return this.req.body;
         return objectFilter(this.req.body, permit);
     };
+    Object.defineProperty(RestfController.prototype, "routeParams", {
+        get: function () {
+            return this.req.params || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "queryParams", {
+        get: function () {
+            return this.req.query || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "body", {
+        get: function () {
+            return this.req.body || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
     RestfController.serialize = undefined;
     return RestfController;
 }());

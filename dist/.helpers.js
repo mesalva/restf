@@ -10,7 +10,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function addMiddleware(controllerName, controllerMethod, path) {
     return function (req, res) {
         try {
-            var controllerInstance_1 = new req.AllControllers[controllerName](req, res);
+            fixEndingParams(req.params);
+            var controllerInstance_1 = new req.AllControllers[controllerName]();
+            controllerInstance_1.req = req;
+            controllerInstance_1.res = res;
             var result = controllerInstance_1.run.apply(controllerInstance_1, __spreadArrays([controllerMethod], middlewareParams(path, req)));
             if (controllerInstance_1.sent)
                 return result;
@@ -19,19 +22,26 @@ function addMiddleware(controllerName, controllerMethod, path) {
             return result.then(function (r) { return controllerInstance_1.respondWith(r); }).catch(handleError(controllerInstance_1));
         }
         catch (e) {
-            console.log(e);
             res.status(500);
             res.send('');
         }
     };
 }
 exports.addMiddleware = addMiddleware;
+function fixEndingParams(params) {
+    if (!params[0])
+        return undefined;
+    var endingParam = params[0];
+    delete params[0];
+    var lastKey = Object.keys(params).pop();
+    params[lastKey] += endingParam;
+}
 function handleError(controllerInstance) {
     return function (error) {
-        var status = 500;
+        var statusCode = 500;
         if (error.message === 'Not Found')
-            status = 404;
-        return controllerInstance.respondWith({ message: error.message, status: status });
+            statusCode = 404;
+        return controllerInstance.respondWith({ message: error.message, statusCode: statusCode });
     };
 }
 function isPromise(obj) {
@@ -50,9 +60,10 @@ function middlewareParams(path, req) {
 }
 function endingParam(path, req) {
     var params = req.params;
-    var sufix = params['0'];
+    var sufix = params['0'] || '';
     delete params['0'];
-    var lastParamName = path.replace(/.*\/:(\w+)\*$/, '$1');
-    params[lastParamName] = params[lastParamName] + sufix;
+    var lastParamName = Object.keys(params).pop();
+    var lastParam = params[lastParamName] || '';
+    params[lastParamName] = lastParam + sufix;
     return Object.values(params);
 }
