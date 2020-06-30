@@ -62,18 +62,26 @@ var Cache = /** @class */ (function () {
         if (redis === void 0) { redis = new ioredis_1.default(process.env.REDIS_URL); }
         this.redis = redis;
     }
-    Cache.prototype.use = function (fullPath, fetcher) {
+    Cache.prototype.use = function (path, fetcher) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.get(fullPath, fetcher).catch(function (_e) { return _this.getFromFetcherSavingAsynchronously(fullPath, fetcher); })];
+                return [2 /*return*/, this.get(path).catch(function (_e) { return _this.runFetcherThenSave(path, fetcher); })];
             });
         });
     };
-    Cache.prototype.get = function (fullPath, fetcher) {
+    Cache.prototype.get = function (path) {
         return __awaiter(this, void 0, void 0, function () {
+            var content;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.getCacheSavingIfNeeded(fullPath, fetcher)];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.redis.get(path)];
+                    case 1:
+                        content = _a.sent();
+                        if (!content)
+                            throw new CacheNotFoundError(path);
+                        return [2 /*return*/, JSON.parse(content)];
+                }
             });
         });
     };
@@ -83,18 +91,17 @@ var Cache = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        expires = new Date().getTime() + Number(process.env.CACHE_TIME || 180000);
-                        json = JSON.stringify({ content: content, expires: expires });
-                        return [4 /*yield*/, this.redis.set(path, json)];
+                        expires = Number(process.env.CACHE_TIME || 180000);
+                        json = JSON.stringify(content);
+                        return [4 /*yield*/, this.redis.set(path, json, 'EX', Math.floor(expires / 1000))];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/, { content: content, expires: expires }];
+                        return [2 /*return*/, content];
                 }
             });
         });
     };
-    Cache.prototype.clear = function (path, forceHardDelete) {
-        if (forceHardDelete === void 0) { forceHardDelete = false; }
+    Cache.prototype.clear = function (path) {
         return __awaiter(this, void 0, void 0, function () {
             var content;
             return __generator(this, function (_a) {
@@ -102,16 +109,12 @@ var Cache = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.getCache(path)];
                     case 1:
                         content = _a.sent();
-                        if (!forceHardDelete) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.hardDelete(path)];
+                        if (!content)
+                            return [2 /*return*/, false];
+                        return [4 /*yield*/, this.redis.del(path)];
                     case 2:
                         _a.sent();
-                        return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, this.softDelete(path, content)];
-                    case 4:
-                        _a.sent();
-                        _a.label = 5;
-                    case 5: return [2 /*return*/, !!content];
+                        return [2 /*return*/, true];
                 }
             });
         });
@@ -133,36 +136,7 @@ var Cache = /** @class */ (function () {
                         content = _a.sent();
                         if (!content)
                             throw new CacheNotFoundError(path);
-                        //TODO here
                         return [2 /*return*/, JSON.parse(content)];
-                }
-            });
-        });
-    };
-    Cache.prototype.getFromFetcherSavingAsynchronously = function (fullPath, fetcher) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, expires, content;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.runFetcherThenSave(fullPath, fetcher)];
-                    case 1:
-                        _a = _b.sent(), expires = _a.expires, content = _a.content;
-                        return [2 /*return*/, this.sendContent({ content: content, expires: expires })];
-                }
-            });
-        });
-    };
-    Cache.prototype.getCacheSavingIfNeeded = function (path, fetcher) {
-        return __awaiter(this, void 0, void 0, function () {
-            var result;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getCache(path)];
-                    case 1:
-                        result = _a.sent();
-                        if (result.expires < new Date().getTime())
-                            this.runFetcherThenSave(path, fetcher);
-                        return [2 /*return*/, this.sendContent(result)];
                 }
             });
         });
@@ -179,21 +153,6 @@ var Cache = /** @class */ (function () {
                 }
             });
         });
-    };
-    Cache.prototype.sendContent = function (_a) {
-        var content = _a.content, expires = _a.expires;
-        Object.defineProperty(content, 'expires', { value: expires, enumerable: false });
-        return content;
-    };
-    Cache.prototype.softDelete = function (path, content) {
-        var cache = JSON.parse(content);
-        var now = new Date().getTime();
-        cache.expires = now - 100;
-        var json = JSON.stringify(cache);
-        return this.redis.set(path, json);
-    };
-    Cache.prototype.hardDelete = function (path) {
-        return this.redis.del(path);
     };
     return Cache;
 }());

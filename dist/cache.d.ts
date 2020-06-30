@@ -8,19 +8,11 @@ export interface ICache {
 export default class Cache implements ICache {
     private redis;
     constructor(redis?: any);
-    use(fullPath: any, fetcher: any): Promise<any>;
-    get(fullPath: any, fetcher: any): Promise<any>;
-    set(path: any, content: any): Promise<{
-        content: any;
-        expires: number;
-    }>;
-    clear(path: any, forceHardDelete?: boolean): Promise<boolean>;
+    use(path: any, fetcher: any): Promise<any>;
+    get(path: any): Promise<any>;
+    set(path: any, content: any): Promise<any>;
+    clear(path: any): Promise<boolean>;
     clearAll(): Promise<any>;
     private getCache;
-    private getFromFetcherSavingAsynchronously;
-    private getCacheSavingIfNeeded;
     private runFetcherThenSave;
-    private sendContent;
-    private softDelete;
-    private hardDelete;
 }

@@ -17,26 +17,28 @@ class CacheNotFoundError extends Error {
 export default class Cache implements ICache {
   constructor(private redis = new Redis(process.env.REDIS_URL)) {}
 
-  public async use(fullPath, fetcher) {
-    return this.get(fullPath, fetcher).catch(_e => this.getFromFetcherSavingAsynchronously(fullPath, fetcher))
+  public async use(path, fetcher) {
+    return this.get(path).catch(_e => this.runFetcherThenSave(path, fetcher))
   }
 
-  public async get(fullPath, fetcher) {
-    return this.getCacheSavingIfNeeded(fullPath, fetcher)
+  public async get(path) {
+    const content = await this.redis.get(path)
+    if (!content) throw new CacheNotFoundError(path)
+    return JSON.parse(content)
   }
 
   public async set(path, content) {
-    const expires = new Date().getTime() + Number(process.env.CACHE_TIME || 180000)
-    const json = JSON.stringify({ content, expires })
-    await this.redis.set(path, json)
-    return { content, expires }
+    const expires = Number(process.env.CACHE_TIME || 180000)
+    const json = JSON.stringify(content)
+    await this.redis.set(path, json, 'EX', Math.floor(expires / 1000))
+    return content
   }
 
-  public async clear(path, forceHardDelete = false) {
+  public async clear(path) {
     const content = await this.getCache(path)
-    if (forceHardDelete) await this.hardDelete(path)
-    else await this.softDelete(path, content)
-    return !!content
+    if (!content) return false
+    await this.redis.del(path)
+    return true
   }
 
   public async clearAll() {
@@ -46,40 +48,11 @@ export default class Cache implements ICache {
   private async getCache(path: string) {
     const content = await this.redis.get(path)
     if (!content) throw new CacheNotFoundError(path)
-    //TODO here
     return JSON.parse(content)
-  }
-
-  private async getFromFetcherSavingAsynchronously(fullPath, fetcher) {
-    const { expires, content } = await this.runFetcherThenSave(fullPath, fetcher)
-    return this.sendContent({ content, expires })
-  }
-
-  private async getCacheSavingIfNeeded(path, fetcher) {
-    const result = await this.getCache(path)
-    if (result.expires < new Date().getTime()) this.runFetcherThenSave(path, fetcher)
-    return this.sendContent(result)
   }
 
   private async runFetcherThenSave(path, fetcher) {
     const response = await fetcher()
     return this.set(path, response)
-  }
-
-  private sendContent({ content, expires }) {
-    Object.defineProperty(content, 'expires', { value: expires, enumerable: false })
-    return content
-  }
-
-  private softDelete(path, content) {
-    const cache = JSON.parse(content)
-    const now = new Date().getTime()
-    cache.expires = now - 100
-    const json = JSON.stringify(cache)
-    return this.redis.set(path, json)
-  }
-
-  private hardDelete(path: string) {
-    return this.redis.del(path)
   }
 }
