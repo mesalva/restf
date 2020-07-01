@@ -10,6 +10,7 @@ export default class RouteDocsRender {
 export interface RouteReport {
     path: string;
     type: string;
+    controller?: any;
     method?: string;
     subRoutes?: RouteReport[];
 }

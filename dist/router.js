@@ -15,7 +15,7 @@ var RestfRouter = /** @class */ (function () {
     }
     RestfRouter.prototype.resources = function (endpoint, Controller) {
         var router = new _routeController_1.default(Controller);
-        var routeReport = { path: endpoint, type: 'resources', subRoutes: [] };
+        var routeReport = { path: endpoint, type: 'resources', subRoutes: [], controller: Controller };
         var methods = _routeController_1.default.resourcesMethods(Controller);
         var addRoute = function (path, type, method) {
             if (!methods[type])
@@ -37,13 +37,14 @@ var RestfRouter = /** @class */ (function () {
         this.router.get(path, function (req, res) { return new _routeDocsRender_1.default(req, res).render(_this.routes); });
     };
     RestfRouter.prototype.listen = function () {
+        this.router.routes = this.routes.map(function (route) { return "router." + route.method + "('" + route.path + "', '" + route.controller + "." + route.type + "')"; });
         return this.router;
     };
     RestfRouter.prototype.addMethod = function (httpMethod) {
         var _this = this;
         return function (path, controllerMethod) {
             var _a = controllerMethod.split(/[@.]/), controllerName = _a[0], methodName = _a[1];
-            _this.routes.push({ path: path, method: httpMethod, type: methodName });
+            _this.routes.push({ path: path, method: httpMethod, type: methodName, controller: controllerName });
             _this.router[httpMethod](path, _helpers_1.addMiddleware(controllerName, methodName, path));
             return _this;
         };

@@ -25,7 +25,7 @@ export default class RestfRouter {
 
   public resources(endpoint: string, Controller: RestfController) {
     const router: any = new RouteController(Controller)
-    const routeReport: RouteReport = { path: endpoint, type: 'resources', subRoutes: [] }
+    const routeReport: RouteReport = { path: endpoint, type: 'resources', subRoutes: [], controller: Controller }
     const methods = RouteController.resourcesMethods(Controller)
     const addRoute = (path: string, type: string, method: string) => {
       if (!methods[type]) return null
@@ -47,13 +47,16 @@ export default class RestfRouter {
   }
 
   public listen() {
+    this.router.routes = this.routes.map(
+      route => `router.${route.method}('${route.path}', '${route.controller}.${route.type}')`
+    )
     return this.router
   }
 
   private addMethod(httpMethod) {
     return (path: string, controllerMethod: string) => {
       const [controllerName, methodName] = controllerMethod.split(/[@.]/)
-      this.routes.push({ path, method: httpMethod, type: methodName })
+      this.routes.push({ path, method: httpMethod, type: methodName, controller: controllerName })
       this.router[httpMethod](path, addMiddleware(controllerName, methodName, path))
       return this
     }
