@@ -103,6 +103,10 @@ export default class RestfController {
   get body() {
     return this.req.body || {}
   }
+
+  get pathname() {
+    return this.req.url
+  }
 }
 
 function objectFilter(obj: any, fields: Array<string>) {

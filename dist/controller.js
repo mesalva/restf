@@ -128,6 +128,13 @@ var RestfController = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RestfController.prototype, "pathname", {
+        get: function () {
+            return this.req.url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     RestfController.serialize = undefined;
     return RestfController;
 }());
