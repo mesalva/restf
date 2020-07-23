@@ -15,9 +15,14 @@ class CacheNotFoundError extends Error {
 }
 
 export default class Cache implements ICache {
-  constructor(private redis = new Redis(process.env.REDIS_URL)) {}
+  private redis
+  constructor(redis) {
+    if (redis) this.redis = redis
+    else if (process.env.REDIS_URL) this.redis = new Redis(process.env.REDIS_URL)
+  }
 
   public async use(path, fetcher) {
+    if (!this.redis) return fetcher()
     return this.get(path).catch(_e => this.runFetcherThenSave(path, fetcher))
   }
 
