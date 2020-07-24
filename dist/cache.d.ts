@@ -6,7 +6,7 @@ export interface ICache {
     clearAll(): Promise<any>;
 }
 export default class Cache implements ICache {
-    private redis;
+    private readonly redis;
     constructor(redis?: any);
     use(path: any, fetcher: any): Promise<any>;
     get(path: any): Promise<any>;

@@ -31,7 +31,7 @@ export function declareModels(folderPath = 'src') {
     .map(file => file.replace(/\.[tj]s$/, ''))
     .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/))
   let content = mountDeclareModelsContent(files)
-  return fs.writeFileSync(`${path('controllers')}/.RestfControllerWithModels.ts`, content)
+  return fs.writeFileSync(`${path('controllers')}/_RestfControllerWithModels.ts`, content)
 }
 
 function mountDeclareModelsContent(files) {

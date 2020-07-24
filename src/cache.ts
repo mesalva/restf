@@ -15,8 +15,9 @@ class CacheNotFoundError extends Error {
 }
 
 export default class Cache implements ICache {
-  private redis
-  constructor(redis) {
+  private readonly redis
+
+  constructor(redis = null) {
     if (redis) this.redis = redis
     else if (process.env.REDIS_URL) this.redis = new Redis(process.env.REDIS_URL)
   }

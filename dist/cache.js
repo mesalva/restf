@@ -59,13 +59,18 @@ var CacheNotFoundError = /** @class */ (function (_super) {
 }(Error));
 var Cache = /** @class */ (function () {
     function Cache(redis) {
-        if (redis === void 0) { redis = new ioredis_1.default(process.env.REDIS_URL); }
-        this.redis = redis;
+        if (redis === void 0) { redis = null; }
+        if (redis)
+            this.redis = redis;
+        else if (process.env.REDIS_URL)
+            this.redis = new ioredis_1.default(process.env.REDIS_URL);
     }
     Cache.prototype.use = function (path, fetcher) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
+                if (!this.redis)
+                    return [2 /*return*/, fetcher()];
                 return [2 /*return*/, this.get(path).catch(function (_e) { return _this.runFetcherThenSave(path, fetcher); })];
             });
         });

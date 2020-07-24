@@ -37,7 +37,7 @@ function declareModels(folderPath) {
         .map(function (file) { return file.replace(/\.[tj]s$/, ''); })
         .filter(function (file) { return !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/); });
     var content = mountDeclareModelsContent(files);
-    return fs.writeFileSync(path('controllers') + "/.RestfControllerWithModels.ts", content);
+    return fs.writeFileSync(path('controllers') + "/_RestfControllerWithModels.ts", content);
 }
 exports.declareModels = declareModels;
 function mountDeclareModelsContent(files) {
