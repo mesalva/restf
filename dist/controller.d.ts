@@ -15,15 +15,17 @@ export default class RestfController {
     run(method: string, ...args: any[]): any;
     protected status(code: number): this;
     protected respondWith(data?: any, options?: ControllerOptions): any;
+    protected send(data?: any): any;
+    protected get routeParams(): any;
+    protected get queryParams(): any;
+    protected get body(): any;
+    protected get headers(): any;
+    protected get pathname(): any;
     protected get currentUser(): any;
     protected tokenToCredentials(token: string): any;
     protected serialize(...a: any[]): any;
     private sendWithMiddlewares;
     params(...permit: Array<string>): any;
-    get routeParams(): any;
-    get queryParams(): any;
-    get body(): any;
-    get headers(): any;
-    get pathname(): any;
+    private sendEmptyResponses;
 }
 export {};

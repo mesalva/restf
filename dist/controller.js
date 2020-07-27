@@ -48,6 +48,53 @@ var RestfController = /** @class */ (function () {
         this.res.status(204);
         return this.res.send();
     };
+    RestfController.prototype.send = function (data) {
+        if (data === void 0) { data = {}; }
+        if (this.sent)
+            return null;
+        if (data.statusCode) {
+            this.res.status(data.statusCode);
+            delete data.statusCode;
+        }
+        if (Object.keys(data).length === 0)
+            return this.sendEmptyResponses();
+        return this.sendWithMiddlewares(data);
+    };
+    Object.defineProperty(RestfController.prototype, "routeParams", {
+        get: function () {
+            return this.req.params || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "queryParams", {
+        get: function () {
+            return this.req.query || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "body", {
+        get: function () {
+            return this.req.body || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "headers", {
+        get: function () {
+            return this.req.headers || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RestfController.prototype, "pathname", {
+        get: function () {
+            return this.req.url;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(RestfController.prototype, "currentUser", {
         get: function () {
             if (this.req.credentials)
@@ -107,41 +154,11 @@ var RestfController = /** @class */ (function () {
             return this.req.body;
         return objectFilter(this.req.body, permit);
     };
-    Object.defineProperty(RestfController.prototype, "routeParams", {
-        get: function () {
-            return this.req.params || {};
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RestfController.prototype, "queryParams", {
-        get: function () {
-            return this.req.query || {};
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RestfController.prototype, "body", {
-        get: function () {
-            return this.req.body || {};
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RestfController.prototype, "headers", {
-        get: function () {
-            return this.req.headers || {};
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RestfController.prototype, "pathname", {
-        get: function () {
-            return this.req.url;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    RestfController.prototype.sendEmptyResponses = function () {
+        this.sent = true;
+        this.res.status(204);
+        return this.res.send();
+    };
     RestfController.serialize = undefined;
     return RestfController;
 }());

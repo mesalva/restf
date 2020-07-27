@@ -51,6 +51,36 @@ export default class RestfController {
     return this.res.send()
   }
 
+  protected send(data: any = {}) {
+    if (this.sent) return null
+    if (data.statusCode) {
+      this.res.status(data.statusCode)
+      delete data.statusCode
+    }
+    if (Object.keys(data).length === 0) return this.sendEmptyResponses()
+    return this.sendWithMiddlewares(data)
+  }
+
+  protected get routeParams() {
+    return this.req.params || {}
+  }
+
+  protected get queryParams() {
+    return this.req.query || {}
+  }
+
+  protected get body() {
+    return this.req.body || {}
+  }
+
+  protected get headers() {
+    return this.req.headers || {}
+  }
+
+  protected get pathname() {
+    return this.req.url
+  }
+
   protected get currentUser() {
     if (this.req.credentials) return this.req.credentials
     const authorization = this.req.cookies.token || this.req.headers.authorization
@@ -92,24 +122,10 @@ export default class RestfController {
     return objectFilter(this.req.body, permit)
   }
 
-  get routeParams() {
-    return this.req.params || {}
-  }
-
-  get queryParams() {
-    return this.req.query || {}
-  }
-
-  get body() {
-    return this.req.body || {}
-  }
-
-  get headers() {
-    return this.req.headers || {}
-  }
-
-  get pathname() {
-    return this.req.url
+  private sendEmptyResponses() {
+    this.sent = true
+    this.res.status(204)
+    return this.res.send()
   }
 }
 
