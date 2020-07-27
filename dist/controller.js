@@ -128,6 +128,13 @@ var RestfController = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RestfController.prototype, "headers", {
+        get: function () {
+            return this.req.headers || {};
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(RestfController.prototype, "pathname", {
         get: function () {
             return this.req.url;

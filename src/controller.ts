@@ -104,6 +104,10 @@ export default class RestfController {
     return this.req.body || {}
   }
 
+  get headers() {
+    return this.req.headers || {}
+  }
+
   get pathname() {
     return this.req.url
   }

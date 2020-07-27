@@ -23,6 +23,7 @@ export default class RestfController {
     get routeParams(): any;
     get queryParams(): any;
     get body(): any;
+    get headers(): any;
     get pathname(): any;
 }
 export {};
