@@ -8,7 +8,7 @@ export default class RestfServer {
     use(...args: any[]): any;
     apidocs(folder?: string, route?: string): void;
     public(folder?: string): void;
-    listen(): void;
+    listen(port?: number | string): void;
     useAfter(middleware: any): void;
     private setAfterMiddlewares;
     private setSecurityMiddlewares;

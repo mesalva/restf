@@ -16,10 +16,7 @@ if (fs.existsSync('./.env'))
     dotenv.config({ path: './.env' });
 if (fs.existsSync('./config/config.env'))
     dotenv.config({ path: './config/config.env' });
-var PORT = process.env.PORT || '5000';
 var mode = process.env.NODE_ENV || 'development';
-// Rate limiting
-var tenMinutes = 10 * 60 * 1000;
 var RestfServer = /** @class */ (function () {
     function RestfServer(options) {
         if (options === void 0) { options = {}; }
@@ -48,12 +45,14 @@ var RestfServer = /** @class */ (function () {
         if (folder === void 0) { folder = 'public'; }
         this.use(express.static(path.join(__dirname, folder)));
     };
-    RestfServer.prototype.listen = function () {
+    RestfServer.prototype.listen = function (port) {
+        if (port === void 0) { port = 5000; }
         this.setEndpointNotFoundMiddleware();
         this.setGeneralErrorMiddleware();
         this.setUnhandledRejection();
-        var message = ("Server running in " + mode + " mode on port " + PORT + "\n").cyan;
-        this._app.listen(PORT, function () { return process.stdout.write(message); });
+        var DEFAULT_PORT = process.env.PORT || port.toString();
+        var message = ("Server running in " + mode + " mode on port " + DEFAULT_PORT + "\n").cyan;
+        this._app.listen(DEFAULT_PORT, function () { return process.stdout.write(message); });
     };
     RestfServer.prototype.useAfter = function (middleware) {
         this.afterMiddlewares.push(middleware);

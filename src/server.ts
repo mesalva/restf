@@ -15,11 +15,7 @@ import * as xss from 'xss-clean'
 if (fs.existsSync('./.env')) dotenv.config({ path: './.env' })
 if (fs.existsSync('./config/config.env')) dotenv.config({ path: './config/config.env' })
 
-const PORT: string = process.env.PORT || '5000'
 const mode: string = process.env.NODE_ENV || 'development'
-
-// Rate limiting
-const tenMinutes: number = 10 * 60 * 1000
 
 export default class RestfServer {
   _app: express.Express
@@ -48,12 +44,13 @@ export default class RestfServer {
     this.use(express.static(path.join(__dirname, folder)))
   }
 
-  public listen() {
+  public listen(port: number | string = 5000) {
     this.setEndpointNotFoundMiddleware()
     this.setGeneralErrorMiddleware()
     this.setUnhandledRejection()
-    const message = `Server running in ${mode} mode on port ${PORT}\n`.cyan
-    this._app.listen(PORT, () => process.stdout.write(message))
+    const DEFAULT_PORT: string = process.env.PORT || port.toString()
+    const message = `Server running in ${mode} mode on port ${DEFAULT_PORT}\n`.cyan
+    this._app.listen(DEFAULT_PORT, () => process.stdout.write(message))
   }
 
   public useAfter(middleware) {
