@@ -1,7 +1,7 @@
 import { Router } from 'express'
-import { addMiddleware } from './.helpers'
+import { addMiddleware } from './_helpers'
 
-export default class RouteController {
+export default class _routeController {
   Controller: any
   router: Router
 

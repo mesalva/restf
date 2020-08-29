@@ -7,7 +7,7 @@ import * as cookieParser from 'cookie-parser'
 import * as helmet from 'helmet'
 import * as hpp from 'hpp'
 import * as dotenv from 'dotenv'
-import cors from './.cors'
+import _cors from './_cors'
 
 // @ts-ignore
 import * as xss from 'xss-clean'
@@ -69,7 +69,7 @@ export default class RestfServer {
     this.use(helmet())
     this.use(xss())
     this.use(hpp())
-    this.use(cors(this.options.allowHosts, this.options.allowHeaders))
+    this.use(_cors(this.options.allowHosts, this.options.allowHeaders))
   }
 
   private setContentMiddlewares() {

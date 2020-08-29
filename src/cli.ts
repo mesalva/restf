@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as fs from 'fs'
-import { declareControllers, declareModels } from './.bin'
+import { declareControllers, declareModels } from './_bin'
 
 const [, , ...args] = process.argv
 

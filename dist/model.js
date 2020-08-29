@@ -47,7 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var _database_1 = require("./.database");
+var _database_1 = require("./_database");
 var RestfModel = /** @class */ (function () {
     function RestfModel(table) {
         var _this = this;

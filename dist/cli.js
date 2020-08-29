@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var _bin_1 = require("./.bin");
+var _bin_1 = require("./_bin");
 var _a = process.argv, args = _a.slice(2);
 if (args[0] === 'dev')
     devCommand();

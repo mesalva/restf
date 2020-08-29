@@ -18,5 +18,5 @@ function getKnexfile() {
 }
 
 // @ts-ignore
-const database = knex(knexfile[environment])
-export default database
+const _database = knex(knexfile[environment])
+export default _database

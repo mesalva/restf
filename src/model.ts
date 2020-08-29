@@ -1,12 +1,12 @@
-import database from './.database'
+import _database from './_database'
 
 export default class RestfModel {
   db: any
 
   constructor(protected table: string) {
-    this.db = database(table)
+    this.db = _database(table)
     this.db.constructor.prototype.raw = async (query: string, options: any[] = []) => {
-      return database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
+      return _database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
     }
     this.db.constructor.prototype.firstParsed = (...args) => {
       return this.db.first(...args).then(parseSingle)
@@ -26,7 +26,7 @@ export default class RestfModel {
         .returning('id')
         .then(([id]) => id)
         .then(id =>
-          database(table)
+          _database(table)
             .where({ id })
             .first(...returns)
         )

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-export default function cors(hostsStr, allowHeaders) {
+export default function _cors(hostsStr, allowHeaders) {
   return (req: Request, res: Response, next: NextFunction) => {
     const hosts = parseHosts(hostsStr)
     const origin: string = getOrigin(req.headers)

@@ -9,7 +9,7 @@ var cookieParser = require("cookie-parser");
 var helmet = require("helmet");
 var hpp = require("hpp");
 var dotenv = require("dotenv");
-var _cors_1 = require("./.cors");
+var _cors_1 = require("./_cors");
 // @ts-ignore
 var xss = require("xss-clean");
 if (fs.existsSync('./.env'))

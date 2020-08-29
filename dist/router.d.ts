@@ -1,5 +1,5 @@
 import { Router as ExpressRouter } from 'express';
-import { RouteReport } from './.routeDocsRender';
+import { RouteReport } from './_routeDocsRender';
 import RestfController from './controller';
 declare type MethodAlias = (path: string, controllerMethod: string) => any;
 export default class RestfRouter {

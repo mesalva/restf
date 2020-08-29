@@ -1,7 +1,7 @@
 import { Router as ExpressRouter } from 'express'
-import RouteDocsRender, { RouteReport } from './.routeDocsRender'
-import RouteController from './.routeController'
-import { addMiddleware } from './.helpers'
+import _routeDocsRender, { RouteReport } from './_routeDocsRender'
+import _routeController from './_routeController'
+import { addMiddleware } from './_helpers'
 import RestfController from './controller'
 
 type MethodAlias = (path: string, controllerMethod: string) => any
@@ -24,9 +24,9 @@ export default class RestfRouter {
   }
 
   public resources(endpoint: string, Controller: RestfController) {
-    const router: any = new RouteController(Controller)
+    const router: any = new _routeController(Controller)
     const routeReport: RouteReport = { path: endpoint, type: 'resources', subRoutes: [], controller: Controller }
-    const methods = RouteController.resourcesMethods(Controller)
+    const methods = _routeController.resourcesMethods(Controller)
     const addRoute = (path: string, type: string, method: string) => {
       if (!methods[type]) return null
       routeReport.subRoutes && routeReport.subRoutes.push({ path, type, method })
@@ -43,7 +43,7 @@ export default class RestfRouter {
   }
 
   public docs(path: string) {
-    this.router.get(path, (req: Request, res: Response) => new RouteDocsRender(req, res).render(this.routes))
+    this.router.get(path, (req: Request, res: Response) => new _routeDocsRender(req, res).render(this.routes))
   }
 
   public listen() {

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
-var _routeDocsRender_1 = require("./.routeDocsRender");
-var _routeController_1 = require("./.routeController");
-var _helpers_1 = require("./.helpers");
+var _routeDocsRender_1 = require("./_routeDocsRender");
+var _routeController_1 = require("./_routeController");
+var _helpers_1 = require("./_helpers");
 var RestfRouter = /** @class */ (function () {
     function RestfRouter() {
         this.router = express_1.Router();
