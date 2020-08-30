@@ -96,7 +96,7 @@ function mountDeclareModelsContent(files) {
     js += '\n\n\nvar ControllerModels = /** @class */ (function () {\n  function ControllerModels() {}\n';
     js += files
         .map(function (model) {
-        return "  Object.defineProperty(ControllerModels.prototype, \"" + model + "\", {\n    get: function () {\n      const model = new " + model + "()\n      if(typeof model.setCredentials === 'function') model.setCredentials(this.currentUser || {})\n      return model\n    },\n    enumerable: true,\n    configurable: true\n  });\n";
+        return "  Object.defineProperty(ControllerModels.prototype, \"" + model + "\", {\n    get: function () {\n      const model = new " + model + "()\n      if(typeof model.authenticate === 'function') model.authenticate(this.currentUser || {})\n      return model\n    },\n    enumerable: true,\n    configurable: true\n  });\n";
     })
         .join('\n');
     js += '  return ControllerModels;\n}());\nexports.default = ControllerModels;';

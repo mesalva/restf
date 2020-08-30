@@ -85,6 +85,10 @@ export default class RestfController extends ControllerModels {
 
   protected get currentUser() {
     if (this.req.credentials) return this.req.credentials
+    if (this.req.headers.uid && this.req.headers['access-token']) {
+      this.req.credentials = { uid: this.req.headers.uid, accessToken: this.req.headers['access-token'] }
+      return this.req.credentials
+    }
     const authorization = this.req.cookies.token || this.req.headers.authorization
     if (!authorization) return null
     const token = authorization.replace(/bearer( +)?/i, '')

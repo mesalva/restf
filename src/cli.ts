@@ -96,7 +96,7 @@ function mountDeclareModelsContent(files) {
     .map(model => {
       return `  Object.defineProperty(ControllerModels.prototype, "${model}", {\n    get: function () {
       const model = new ${model}()
-      if(typeof model.setCredentials === 'function') model.setCredentials(this.currentUser || {})
+      if(typeof model.authenticate === 'function') model.authenticate(this.currentUser || {})
       return model
     },
     enumerable: true,

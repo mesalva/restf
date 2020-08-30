@@ -116,6 +116,10 @@ var RestfController = /** @class */ (function (_super) {
         get: function () {
             if (this.req.credentials)
                 return this.req.credentials;
+            if (this.req.headers.uid && this.req.headers['access-token']) {
+                this.req.credentials = { uid: this.req.headers.uid, accessToken: this.req.headers['access-token'] };
+                return this.req.credentials;
+            }
             var authorization = this.req.cookies.token || this.req.headers.authorization;
             if (!authorization)
                 return null;
