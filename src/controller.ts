@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import Cache from './cache'
+import ControllerModels from './.ControllerModels'
 
 interface ControllerOptions {
   status?: number
 }
 
-export default class RestfController {
+export default class RestfController extends ControllerModels {
   req: Request | any
   res: Response | any
   sent?: boolean
@@ -16,6 +17,7 @@ export default class RestfController {
   protected static serialize = undefined
 
   constructor(req?: Request | any, res?: Response | any) {
+    super()
     this.req = req
     this.res = res
   }

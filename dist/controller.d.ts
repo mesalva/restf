@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import ControllerModels from './.ControllerModels';
 interface ControllerOptions {
     status?: number;
 }
-export default class RestfController {
+export default class RestfController extends ControllerModels {
     req: Request | any;
     res: Response | any;
     sent?: boolean;

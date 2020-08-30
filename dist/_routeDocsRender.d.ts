@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-export default class RouteDocsRender {
+export default class _routeDocsRender {
     req: Request;
     res: Response;
     lastBase?: string;

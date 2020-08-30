@@ -82,7 +82,7 @@ var RestfServer = /** @class */ (function () {
                 req.AllControllers = require('./.allControllers');
             }
             catch (e) {
-                console.log('error to require .allControllers');
+                console.log('error to require .allControllers\n\n', e);
             }
             next();
         });

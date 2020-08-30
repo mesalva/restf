@@ -1,5 +1,5 @@
 import { Router } from 'express';
-export default class RouteController {
+export default class _routeController {
     Controller: any;
     router: Router;
     constructor(Controller: any);
