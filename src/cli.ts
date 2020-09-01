@@ -82,15 +82,15 @@ function declareModels(folderPath = 'src') {
     .filter(file => file.match(/[A-Z].*\.[tj]s$/))
     .filter(file => !file.match(/\.(d|test|spec)\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
-    .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/))
-  let content = mountDeclareModelsContent(files)
+    .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api|Search|SearchBase)$/))
+  let content = mountDeclareModelsContent(files, folderPath)
   fs.writeFileSync(`${projectPath}/node_modules/restf/.ControllerModels.js`, content.js)
   fs.writeFileSync(`${projectPath}/node_modules/restf/.ControllerModels.d.ts`, content.declaration)
 }
 
-function mountDeclareModelsContent(files) {
+function mountDeclareModelsContent(files, folderPath) {
   let js = `"use strict";\n`
-  js += files.map(model => `const ${model} = require('../../src/models/${model}').default`).join('\n')
+  js += files.map(model => `const ${model} = require('../../${folderPath}/models/${model}').default`).join('\n')
   js += '\n\n\nvar ControllerModels = /** @class */ (function () {\n  function ControllerModels() {}\n'
   js += files
     .map(model => {
@@ -105,9 +105,9 @@ function mountDeclareModelsContent(files) {
     })
     .join('\n')
   js += '  return ControllerModels;\n}());\nexports.default = ControllerModels;'
-  let declaration = files.map(model => `import { I${model} } from '../../src/models/${model}'\n`)
+  let declaration = files.map(model => `import { I${model} } from '../../${folderPath}/models/${model}'\n`).join('')
   declaration += '\nexport default class ControllerModels {\n'
-  declaration += files.map(model => `  protected get ${model}(): I${model};\n`)
+  declaration += files.map(model => `  protected get ${model}(): I${model};\n`).join('')
   declaration += '}\n'
-  return {js, declaration}
+  return { js, declaration }
 }

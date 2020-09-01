@@ -33,6 +33,10 @@ var RestfServer = /** @class */ (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        this._app.use(function (req, _res, next) {
+            console.log('h3', req.url);
+            next();
+        });
         return (_a = this._app).use.apply(_a, args);
     };
     RestfServer.prototype.apidocs = function (folder, route) {
@@ -78,6 +82,7 @@ var RestfServer = /** @class */ (function () {
     };
     RestfServer.prototype.setControllersMiddleware = function () {
         this.use(function (req, _res, next) {
+            console.log('h1');
             try {
                 req.AllControllers = require('./.allControllers');
             }
@@ -105,6 +110,7 @@ var RestfServer = /** @class */ (function () {
     };
     RestfServer.prototype.setUnhandledRejection = function () {
         process.on('unhandledRejection', function (err) {
+            console.log('h2');
             process.stdout.write(("UnhandledRejection Error: " + err.message + "\n").red);
         });
     };

@@ -85,14 +85,14 @@ function declareModels(folderPath) {
         .filter(function (file) { return file.match(/[A-Z].*\.[tj]s$/); })
         .filter(function (file) { return !file.match(/\.(d|test|spec)\.[tj]s$/); })
         .map(function (file) { return file.replace(/\.[tj]s$/, ''); })
-        .filter(function (file) { return !file.match(/^(DB|ModelBase|DBBase|Model|Api)$/); });
-    var content = mountDeclareModelsContent(files);
+        .filter(function (file) { return !file.match(/^(DB|ModelBase|DBBase|Model|Api|Search|SearchBase)$/); });
+    var content = mountDeclareModelsContent(files, folderPath);
     fs.writeFileSync(projectPath + "/node_modules/restf/.ControllerModels.js", content.js);
     fs.writeFileSync(projectPath + "/node_modules/restf/.ControllerModels.d.ts", content.declaration);
 }
-function mountDeclareModelsContent(files) {
+function mountDeclareModelsContent(files, folderPath) {
     var js = "\"use strict\";\n";
-    js += files.map(function (model) { return "const " + model + " = require('../../src/models/" + model + "').default"; }).join('\n');
+    js += files.map(function (model) { return "const " + model + " = require('../../" + folderPath + "/models/" + model + "').default"; }).join('\n');
     js += '\n\n\nvar ControllerModels = /** @class */ (function () {\n  function ControllerModels() {}\n';
     js += files
         .map(function (model) {
@@ -100,9 +100,9 @@ function mountDeclareModelsContent(files) {
     })
         .join('\n');
     js += '  return ControllerModels;\n}());\nexports.default = ControllerModels;';
-    var declaration = files.map(function (model) { return "import { I" + model + " } from '../../src/models/" + model + "'\n"; });
+    var declaration = files.map(function (model) { return "import { I" + model + " } from '../../" + folderPath + "/models/" + model + "'\n"; }).join('');
     declaration += '\nexport default class ControllerModels {\n';
-    declaration += files.map(function (model) { return "  protected get " + model + "(): I" + model + ";\n"; });
+    declaration += files.map(function (model) { return "  protected get " + model + "(): I" + model + ";\n"; }).join('');
     declaration += '}\n';
     return { js: js, declaration: declaration };
 }

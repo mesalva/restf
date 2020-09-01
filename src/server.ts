@@ -32,6 +32,10 @@ export default class RestfServer {
   }
 
   public use(...args) {
+    this._app.use((req, _res, next) => {
+      console.log('h3', req.url)
+      next()
+    })
     return this._app.use(...args)
   }
 
@@ -80,6 +84,7 @@ export default class RestfServer {
 
   private setControllersMiddleware() {
     this.use((req, _res, next) => {
+      console.log('h1')
       try {
         req.AllControllers = require('./.allControllers')
       } catch (e) {
@@ -109,6 +114,7 @@ export default class RestfServer {
 
   private setUnhandledRejection() {
     process.on('unhandledRejection', function(err: Error) {
+      console.log('h2')
       process.stdout.write(`UnhandledRejection Error: ${err.message}\n`.red)
     })
   }
