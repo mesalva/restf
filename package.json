@@ -44,6 +44,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-uglify-es": "^2.0.0",
+    "jsmin": "^1.0.1",
     "prettier": "^1.19.1",
     "typescript": "^3.7.2"
   }

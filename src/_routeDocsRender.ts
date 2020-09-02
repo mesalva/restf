@@ -1,14 +1,9 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 
 export default class _routeDocsRender {
-  req: Request
-  res: Response
   lastBase?: string
 
-  constructor(req: Request, res: Response) {
-    this.req = req
-    this.res = res
-  }
+  constructor(private res: Response) {}
 
   render(routes: Array<any>) {
     const values = routes.map(this.renderRow).join('')

@@ -5,9 +5,13 @@ import { addMiddleware } from './_helpers'
 import RestfController from './controller'
 
 type MethodAlias = (path: string, controllerMethod: string) => any
+type RouterType = { 
+  routes?: any
+  get?: any
+} & ExpressRouter
 
 export default class RestfRouter {
-  router: ExpressRouter
+  router: RouterType
   routes: RouteReport[]
   get: MethodAlias
   post: MethodAlias
@@ -43,7 +47,7 @@ export default class RestfRouter {
   }
 
   public docs(path: string) {
-    this.router.get(path, (req: Request, res: Response) => new _routeDocsRender(req, res).render(this.routes))
+    this.router.get(path, (_, res) => new _routeDocsRender(res).render(this.routes))
   }
 
   public listen() {

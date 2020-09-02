@@ -2,10 +2,10 @@
   "compilerOptions": {
     "target": "es6",
     "allowJs": true,
-    "strict": false,
     "esModuleInterop": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "declaration": true,
     "baseUrl": "src",
     "outDir": "dist"
   },
