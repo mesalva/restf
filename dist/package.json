@@ -1,6 +1,6 @@
 {
   "name": "restf",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "A RESTFull api framework",
   "main": "router.js",
   "author": "Andre Antunes Vieira",
@@ -40,7 +40,6 @@
     "@types/knex": "^0.16.1",
     "@types/node": "^12.12.11",
     "dts-gen": "^0.5.8",
-    "jsmin": "^1.0.1",
     "prettier": "^1.19.1",
     "typescript": "^3.7.2",
     "uglify-js": "^3.10.3"
