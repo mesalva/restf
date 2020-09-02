@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addMiddleware = void 0;
 function addMiddleware(controllerName, controllerMethod, path) {
     return (req, res) => {
         try {
