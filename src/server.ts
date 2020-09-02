@@ -1,16 +1,14 @@
 import 'colors'
 import * as fs from 'fs'
 import * as path from 'path'
-import * as express from 'express'
-import * as fileupload from 'express-fileupload'
-import * as cookieParser from 'cookie-parser'
-import * as helmet from 'helmet'
-import * as hpp from 'hpp'
 import * as dotenv from 'dotenv'
-import _cors from './_cors'
-
-// @ts-ignore
 import * as xss from 'xss-clean'
+import express from 'express'
+import fileupload from 'express-fileupload'
+import cookieParser from 'cookie-parser'
+import helmet from 'helmet'
+import hpp from 'hpp'
+import _cors from './_cors'
 
 if (fs.existsSync('./.env')) dotenv.config({ path: './.env' })
 if (fs.existsSync('./config/config.env')) dotenv.config({ path: './config/config.env' })
@@ -33,7 +31,6 @@ export default class RestfServer {
 
   public use(...args) {
     this._app.use((req, _res, next) => {
-      console.log('h3', req.url)
       next()
     })
     return this._app.use(...args)
@@ -84,7 +81,6 @@ export default class RestfServer {
 
   private setControllersMiddleware() {
     this.use((req, _res, next) => {
-      console.log('h1')
       try {
         req.AllControllers = require('./.allControllers')
       } catch (e) {
@@ -106,7 +102,6 @@ export default class RestfServer {
     this.use((err: any, req: express.Request, res: express.Response, next: any) => {
       const error = err.message || 'Server Error'
       res.status(err.statusCode || 500)
-      console.log(err)
       res.json({ error })
       return next()
     })
@@ -114,7 +109,6 @@ export default class RestfServer {
 
   private setUnhandledRejection() {
     process.on('unhandledRejection', function(err: Error) {
-      console.log('h2')
       process.stdout.write(`UnhandledRejection Error: ${err.message}\n`.red)
     })
   }
