@@ -10,7 +10,6 @@ export default class RestfController extends ControllerModels {
     permit?: Array<string>;
     currentMethod?: string;
     protected static serialize: any;
-    constructor(req?: Request | any, res?: Response | any);
     protected cached(path: string, method: Function): Promise<any>;
     protected clearCache(path: string): Promise<boolean>;
     run(method: string, ...args: any[]): any;
