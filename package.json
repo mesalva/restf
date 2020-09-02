@@ -6,7 +6,7 @@
   "author": "Andre Antunes Vieira",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "bin/build.sh",
     "test": "jest",
     "deploy:prod": "yarn build && cd dist && npm publish && cd ..",
     "deploy:rc": "yarn build && cd dist && npm publish --tag rc && cd ..",
@@ -40,8 +40,8 @@
     "@types/knex": "^0.16.1",
     "@types/node": "^12.12.11",
     "dts-gen": "^0.5.8",
-    "jsmin": "^1.0.1",
     "prettier": "^1.19.1",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "uglify-js": "^3.10.3"
   }
 }
