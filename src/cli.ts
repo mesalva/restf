@@ -104,7 +104,7 @@ function mountDeclareModelsContent(files, folderPath) {
   });\n`
     })
     .join('\n')
-  js += '  return ControllerModels;\n}());\nexports.default = ControllerModels;'
+  js += '  return ControllerModels;\n}());\nmodule.exports = ControllerModels;'
   let declaration = files.map(model => `import { I${model} } from '../../${folderPath}/models/${model}'\n`).join('')
   declaration += '\nexport default class ControllerModels {\n'
   declaration += files.map(model => `  protected get ${model}(): I${model};\n`).join('')

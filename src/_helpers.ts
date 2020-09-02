@@ -13,6 +13,7 @@ export function addMiddleware(controllerName: string, controllerMethod: string, 
       if (!isPromise(result)) return controllerInstance.respondWith(result)
       return result.then((r: any) => controllerInstance.respondWith(r)).catch(handleError(controllerInstance))
     } catch (e) {
+      console.log(e)
       res.status(500)
       res.send('')
     }

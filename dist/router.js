@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const _routeDocsRender_1 = __importDefault(require("./_routeDocsRender"));
-const _routeController_1 = __importDefault(require("./_routeController"));
-const _helpers_1 = require("./_helpers");
-class RestfRouter {
-    constructor() {
+var express_1 = require("express");
+var _routeDocsRender_1 = __importDefault(require("./_routeDocsRender"));
+var _routeController_1 = __importDefault(require("./_routeController"));
+var _helpers_1 = require("./_helpers");
+var RestfRouter = /** @class */ (function () {
+    function RestfRouter() {
         this.router = express_1.Router();
         this.routes = [];
         this.get = this.addMethod('get');
@@ -16,14 +16,14 @@ class RestfRouter {
         this.delete = this.addMethod('delete');
         this.update = this.addMethod('update');
     }
-    resources(endpoint, Controller) {
-        const router = new _routeController_1.default(Controller);
-        const routeReport = { path: endpoint, type: 'resources', subRoutes: [], controller: Controller };
-        const methods = _routeController_1.default.resourcesMethods(Controller);
-        const addRoute = (path, type, method) => {
+    RestfRouter.prototype.resources = function (endpoint, Controller) {
+        var router = new _routeController_1.default(Controller);
+        var routeReport = { path: endpoint, type: 'resources', subRoutes: [], controller: Controller };
+        var methods = _routeController_1.default.resourcesMethods(Controller);
+        var addRoute = function (path, type, method) {
             if (!methods[type])
                 return null;
-            routeReport.subRoutes && routeReport.subRoutes.push({ path, type, method });
+            routeReport.subRoutes && routeReport.subRoutes.push({ path: path, type: type, method: method });
             return router[method](path, type);
         };
         addRoute('/', 'index', 'get');
@@ -34,21 +34,24 @@ class RestfRouter {
         this.routes.push(routeReport);
         this.router.use(endpoint, router.listen());
         return this;
-    }
-    docs(path) {
-        this.router.get(path, (req, res) => new _routeDocsRender_1.default(req, res).render(this.routes));
-    }
-    listen() {
-        this.router['routes'] = this.routes.map(route => `router.${route.method}('${route.path}', '${route.controller}.${route.type}')`);
+    };
+    RestfRouter.prototype.docs = function (path) {
+        var _this = this;
+        this.router.get(path, function (req, res) { return new _routeDocsRender_1.default(req, res).render(_this.routes); });
+    };
+    RestfRouter.prototype.listen = function () {
+        this.router['routes'] = this.routes.map(function (route) { return "router." + route.method + "('" + route.path + "', '" + route.controller + "." + route.type + "')"; });
         return this.router;
-    }
-    addMethod(httpMethod) {
-        return (path, controllerMethod) => {
-            const [controllerName, methodName] = controllerMethod.split(/[@.]/);
-            this.routes.push({ path, method: httpMethod, type: methodName, controller: controllerName });
-            this.router[httpMethod](path, _helpers_1.addMiddleware(controllerName, methodName, path));
-            return this;
+    };
+    RestfRouter.prototype.addMethod = function (httpMethod) {
+        var _this = this;
+        return function (path, controllerMethod) {
+            var _a = controllerMethod.split(/[@.]/), controllerName = _a[0], methodName = _a[1];
+            _this.routes.push({ path: path, method: httpMethod, type: methodName, controller: controllerName });
+            _this.router[httpMethod](path, _helpers_1.addMiddleware(controllerName, methodName, path));
+            return _this;
         };
-    }
-}
+    };
+    return RestfRouter;
+}());
 exports.default = RestfRouter;

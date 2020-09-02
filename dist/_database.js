@@ -7,14 +7,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = __importStar(require("path"));
-const knex = __importStar(require("knex"));
+var path = __importStar(require("path"));
+var knex = __importStar(require("knex"));
 //TODO add , "../.." when as lib
 // @ts-ignore
-const fullPath = (p) => path.join(__dirname, '../..', p);
-const knexfile = getKnexfile();
+var fullPath = function (p) { return path.join(__dirname, '../..', p); };
+var knexfile = getKnexfile();
 // @ts-ignore
-const environment = process.env.NODE_ENV || 'development';
+var environment = process.env.NODE_ENV || 'development';
 function getKnexfile() {
     try {
         return require(fullPath('knexfile'));
@@ -24,5 +24,5 @@ function getKnexfile() {
     }
 }
 // @ts-ignore
-const _database = knex(knexfile[environment]);
+var _database = knex(knexfile[environment]);
 exports.default = _database;
