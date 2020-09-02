@@ -1,8 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ControllerModels = /** @class */ (function () {
-    function ControllerModels() {
-    }
-    return ControllerModels;
-}());
+class ControllerModels {
+}
 exports.default = ControllerModels;

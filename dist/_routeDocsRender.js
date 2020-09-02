@@ -1,1 +1,25 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var _routeDocsRender=function(){function e(e){var s=this;this.res=e,this.renderRow=function(t){if("resources"!==t.type)return s.lastBase=t.path.split("/")[1],'<div style="margin-top: 24px;">'+t.method+" - "+(t.type||"")+"("+t.path+")</div>";var r='<div style="margin-top: 24px;">Resources: '+t.path+"</div>";return t.subRoutes.forEach(function(e){r+='<div style="margin-left: 24px;">'+e.method+" - "+(e.type||"")+"("+t.path+e.path+")</div>"}),s.lastBase=t.path.split("/")[1],r}}return e.prototype.render=function(e){var t=e.map(this.renderRow).join("");return this.res.send(t)},e}();exports.default=_routeDocsRender;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class _routeDocsRender {
+    constructor(req, res) {
+        this.renderRow = (route) => {
+            if (route.type === 'resources') {
+                let content = `<div style="margin-top: 24px;">Resources: ${route.path}</div>`;
+                route.subRoutes.forEach((r) => {
+                    content += `<div style="margin-left: 24px;">${r.method} - ${r.type || ''}(${route.path}${r.path})</div>`;
+                });
+                this.lastBase = route.path.split('/')[1];
+                return content;
+            }
+            this.lastBase = route.path.split('/')[1];
+            return `<div style="margin-top: 24px;">${route.method} - ${route.type || ''}(${route.path})</div>`;
+        };
+        this.req = req;
+        this.res = res;
+    }
+    render(routes) {
+        const values = routes.map(this.renderRow).join('');
+        return this.res.send(values);
+    }
+}
+exports.default = _routeDocsRender;

@@ -1,1 +1,40 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,r,n){void 0===n&&(n=r),Object.defineProperty(e,n,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,n){void 0===n&&(n=r),e[n]=t[r]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)"default"!==r&&Object.hasOwnProperty.call(e,r)&&__createBinding(t,e,r);return __setModuleDefault(t,e),t};Object.defineProperty(exports,"__esModule",{value:!0});var path=__importStar(require("path")),knex=__importStar(require("knex")),fullPath=function(e){return path.join(__dirname,"../..",e)},knexfile=getKnexfile(),environment=process.env.NODE_ENV||"development";function getKnexfile(){try{return require(fullPath("knexfile"))}catch(e){return require(fullPath("config/knexfile"))}}var _database=knex(knexfile[environment]);exports.default=_database;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const path = __importStar(require("path"));
+const knex = __importStar(require("knex"));
+//TODO add , "../.." when as lib
+// @ts-ignore
+const fullPath = (p) => path.join(__dirname, '../..', p);
+const knexfile = getKnexfile();
+// @ts-ignore
+const environment = process.env.NODE_ENV || 'development';
+function getKnexfile() {
+    try {
+        return require(fullPath('knexfile'));
+    }
+    catch (e) {
+        return require(fullPath('config/knexfile'));
+    }
+}
+// @ts-ignore
+const _database = knex(knexfile[environment]);
+exports.default = _database;

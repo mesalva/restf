@@ -1,1 +1,37 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var express_1=require("express"),_helpers_1=require("./_helpers"),_routeController=function(){function e(e){this.Controller=e,this.router=express_1.Router({mergeParams:!0})}return e.prototype.addRoute=function(e,t,r){return this.router.route(e)[t](_helpers_1.addMiddleware(this.Controller,r,e))},e.prototype.get=function(e,t){return this.addRoute(e,"get",t)},e.prototype.post=function(e,t){return this.addRoute(e,"post",t)},e.prototype.put=function(e,t){return this.addRoute(e,"put",t)},e.prototype.delete=function(e,t){return this.addRoute(e,"delete",t)},e.prototype.listen=function(){return this.router},e.resourcesMethods=function(e){var r=["index","create","show","update","destroy"];return Object.getOwnPropertyNames(e.prototype).reduce(function(e,t){return e[t]=r.includes(t),e},{})},e}();exports.default=_routeController;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const _helpers_1 = require("./_helpers");
+class _routeController {
+    constructor(Controller) {
+        this.Controller = Controller;
+        this.router = express_1.Router({ mergeParams: true });
+    }
+    addRoute(path, httpMethod, controllerMethod) {
+        const route = this.router.route(path);
+        return route[httpMethod](_helpers_1.addMiddleware(this.Controller, controllerMethod, path));
+    }
+    get(path, controllerMethod) {
+        return this.addRoute(path, 'get', controllerMethod);
+    }
+    post(path, controllerMethod) {
+        return this.addRoute(path, 'post', controllerMethod);
+    }
+    put(path, controllerMethod) {
+        return this.addRoute(path, 'put', controllerMethod);
+    }
+    delete(path, controllerMethod) {
+        return this.addRoute(path, 'delete', controllerMethod);
+    }
+    listen() {
+        return this.router;
+    }
+    static resourcesMethods(Controller) {
+        const allowedMethods = ['index', 'create', 'show', 'update', 'destroy'];
+        return Object.getOwnPropertyNames(Controller.prototype).reduce((obj, name) => {
+            obj[name] = allowedMethods.includes(name);
+            return obj;
+        }, {});
+    }
+}
+exports.default = _routeController;

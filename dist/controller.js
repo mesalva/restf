@@ -1,1 +1,131 @@
-"use strict";var __extends=this&&this.__extends||function(){var n=function(e,t){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r])})(e,t)};return function(e,t){function r(){this.constructor=e}n(e,t),e.prototype=null===t?Object.create(t):(r.prototype=t.prototype,new r)}}(),__spreadArrays=this&&this.__spreadArrays||function(){for(var e=0,t=0,r=arguments.length;t<r;t++)e+=arguments[t].length;for(var n=Array(e),s=0,t=0;t<r;t++)for(var o=arguments[t],i=0,u=o.length;i<u;i++,s++)n[s]=o[i];return n},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0});var jsonwebtoken_1=__importDefault(require("jsonwebtoken")),cache_1=__importDefault(require("./cache")),_ControllerModels_1=__importDefault(require("./.ControllerModels")),RestfController=function(n){function e(e,t){var r=n.call(this)||this;return r.currentMethod="undefined",r.req=e,r.res=t,r}return __extends(e,n),e.prototype.cached=function(e,t){return(new cache_1.default).use(e,t)},e.prototype.clearCache=function(e){return(new cache_1.default).clear(e)},e.prototype.run=function(e){for(var t=[],r=1;r<arguments.length;r++)t[r-1]=arguments[r];return this.currentMethod=e,this[e].apply(this,t)},e.prototype.status=function(e){return this.res.status(e),this},e.prototype.respondWith=function(e,t){return void 0===e&&(e={}),void 0===t&&(t={}),this.sent?null:((t.status||e.statusCode)&&(this.res.status(t.status||e.statusCode),delete e.statusCode),t.status||0<Object.keys(e).length?this.sendWithMiddlewares(e):(this.sent=!0,this.res.status(204),this.res.send()))},e.prototype.send=function(e){return void 0===e&&(e={}),this.sent?null:(e.statusCode&&(this.res.status(e.statusCode),delete e.statusCode),0===Object.keys(e).length?this.sendEmptyResponses():this.sendWithMiddlewares(e))},Object.defineProperty(e.prototype,"routeParams",{get:function(){return this.req.params||{}},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"queryParams",{get:function(){return this.req.query||{}},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"body",{get:function(){return this.req.body||{}},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"headers",{get:function(){return this.req.headers||{}},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"pathname",{get:function(){return this.req.url},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"currentUser",{get:function(){if(this.req.credentials)return this.req.credentials;if(this.req.headers.uid&&this.req.headers["access-token"])return this.req.credentials={uid:this.req.headers.uid,accessToken:this.req.headers["access-token"]},this.req.credentials;var e=this.req.cookies.token||this.req.headers.authorization;if(!e)return null;var t=e.replace(/bearer( +)?/i,"");return t?(this.req.credentials=this.tokenToCredentials(t),Object.defineProperty(this.req.credentials,"iat",{enumerable:!1}),Object.defineProperty(this.req.credentials,"exp",{enumerable:!1}),this.req.credentials):null},enumerable:!1,configurable:!0}),e.prototype.tokenToCredentials=function(e){return jsonwebtoken_1.default.verify(e,process.env.JWT_SECRET||"")},e.prototype.serialize=function(){for(var e,t=[],r=0;r<arguments.length;r++)t[r]=arguments[r];var n=this.constructor.serializer;if(!n)return null;var s=this.currentMethod;return(e=new n(this))[s].apply(e,t)},e.prototype.sendWithMiddlewares=function(e,t){var r=this;return void 0===t&&(t=0),this.req.afterMiddlewares&&t<this.req.afterMiddlewares.length?this.req.afterMiddlewares[t](this,e,function(e){return r.sendWithMiddlewares(e,t+1)}):this.sent?null:(this.sent=!0,"string"==typeof e?this.res.send(e):this.res.json(e))},e.prototype.params=function(){for(var e=[],t=0;t<arguments.length;t++)e[t]=arguments[t];var r=this.permit;return r&&(e=__spreadArrays(r,e)),0===e.length?this.req.body:objectFilter(this.req.body,e)},e.prototype.sendEmptyResponses=function(){return this.sent=!0,this.res.status(204),this.res.send()},e.serialize=void 0,e}(_ControllerModels_1.default);function objectFilter(r,e){return e.reduce(function(e,t){return r[t]&&(e[t]=r[t]),e},{})}exports.default=RestfController;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const cache_1 = __importDefault(require("./cache"));
+const _ControllerModels_1 = __importDefault(require("./.ControllerModels"));
+class RestfController extends _ControllerModels_1.default {
+    constructor(req, res) {
+        super();
+        this.currentMethod = 'undefined';
+        this.req = req;
+        this.res = res;
+    }
+    cached(path, method) {
+        return new cache_1.default().use(path, method);
+    }
+    clearCache(path) {
+        return new cache_1.default().clear(path);
+    }
+    run(method, ...args) {
+        this.currentMethod = method;
+        return this[method](...args);
+    }
+    status(code) {
+        this.res.status(code);
+        return this;
+    }
+    respondWith(data = {}, options = {}) {
+        if (this.sent)
+            return null;
+        if (options.status || data.statusCode) {
+            this.res.status(options.status || data.statusCode);
+            delete data.statusCode;
+        }
+        if (options.status || Object.keys(data).length > 0)
+            return this.sendWithMiddlewares(data);
+        this.sent = true;
+        this.res.status(204);
+        return this.res.send();
+    }
+    send(data = {}) {
+        if (this.sent)
+            return null;
+        if (data.statusCode) {
+            this.res.status(data.statusCode);
+            delete data.statusCode;
+        }
+        if (Object.keys(data).length === 0)
+            return this.sendEmptyResponses();
+        return this.sendWithMiddlewares(data);
+    }
+    get routeParams() {
+        return this.req.params || {};
+    }
+    get queryParams() {
+        return this.req.query || {};
+    }
+    get body() {
+        return this.req.body || {};
+    }
+    get headers() {
+        return this.req.headers || {};
+    }
+    get pathname() {
+        return this.req.url;
+    }
+    get currentUser() {
+        if (this.req.credentials)
+            return this.req.credentials;
+        if (this.req.headers.uid && this.req.headers['access-token']) {
+            this.req.credentials = { uid: this.req.headers.uid, accessToken: this.req.headers['access-token'] };
+            return this.req.credentials;
+        }
+        const authorization = this.req.cookies.token || this.req.headers.authorization;
+        if (!authorization)
+            return null;
+        const token = authorization.replace(/bearer( +)?/i, '');
+        if (!token)
+            return null;
+        this.req.credentials = this.tokenToCredentials(token);
+        Object.defineProperty(this.req.credentials, 'iat', { enumerable: false });
+        Object.defineProperty(this.req.credentials, 'exp', { enumerable: false });
+        return this.req.credentials;
+    }
+    tokenToCredentials(token) {
+        return jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || '');
+    }
+    serialize(...a) {
+        const constructor = this.constructor;
+        const Serializer = constructor.serializer;
+        if (!Serializer)
+            return null;
+        const currentMethod = this.currentMethod;
+        return new Serializer(this)[currentMethod](...a);
+    }
+    sendWithMiddlewares(data, i = 0) {
+        if (this.req.afterMiddlewares && i < this.req.afterMiddlewares.length) {
+            return this.req.afterMiddlewares[i](this, data, newData => this.sendWithMiddlewares(newData, i + 1));
+        }
+        if (this.sent)
+            return null;
+        this.sent = true;
+        if (typeof data === 'string')
+            return this.res.send(data);
+        return this.res.json(data);
+    }
+    params(...permit) {
+        const controllerPermit = this.permit;
+        if (controllerPermit)
+            permit = [...controllerPermit, ...permit];
+        if (permit.length === 0)
+            return this.req.body;
+        return objectFilter(this.req.body, permit);
+    }
+    sendEmptyResponses() {
+        this.sent = true;
+        this.res.status(204);
+        return this.res.send();
+    }
+}
+exports.default = RestfController;
+RestfController.serialize = undefined;
+function objectFilter(obj, fields) {
+    return fields.reduce((result, field) => {
+        if (obj[field])
+            result[field] = obj[field];
+        return result;
+    }, {});
+}

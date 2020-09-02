@@ -1,8 +1,8 @@
 import 'colors'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as dotenv from 'dotenv'
-import * as xss from 'xss-clean'
+import fs from 'fs'
+import path from 'path'
+import dotenv from 'dotenv'
+import xss from 'xss-clean'
 import express from 'express'
 import fileupload from 'express-fileupload'
 import cookieParser from 'cookie-parser'
@@ -103,6 +103,7 @@ export default class RestfServer {
       const error = err.message || 'Server Error'
       res.status(err.statusCode || 500)
       res.json({ error })
+      console.log(error)
       return next()
     })
   }

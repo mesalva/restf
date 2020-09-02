@@ -1,1 +1,26 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var RestfSerializer=function(){function t(t){void 0===t&&(t=void 0),this.controller=t}return t.prototype.set=function(t){var n=this;Object.entries(t).forEach(function(t){var e=t[0],r=t[1];return n[e]=r})},t.prototype.get=function(t){if(!/\./.test(t))return this[t];var e=t.split(".");return this[e[0]][e[1]]},t.use=function(t){return(new this)[t]},t.staticfy=function(){for(var i=this,t=[],e=0;e<arguments.length;e++)t[e]=arguments[e];t.forEach(function(n){i[n]=function(){for(var t,e=[],r=0;r<arguments.length;r++)e[r]=arguments[r];return(t=new i)[n].apply(t,e)}})},t}();exports.default=RestfSerializer;
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class RestfSerializer {
+    constructor(controller = undefined) {
+        this.controller = controller;
+    }
+    set(obj) {
+        Object.entries(obj).forEach(([name, value]) => (this[name] = value));
+    }
+    get(path) {
+        if (!/\./.test(path))
+            return this[path];
+        const paths = path.split('.');
+        return this[paths[0]][paths[1]];
+    }
+    static use(method) {
+        return new this()[method];
+    }
+    static staticfy(...methods) {
+        methods.forEach(method => {
+            ``;
+            this[method] = (...args) => new this()[method](...args);
+        });
+    }
+}
+exports.default = RestfSerializer;

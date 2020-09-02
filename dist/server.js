@@ -1,1 +1,107 @@
-"use strict";var __createBinding=this&&this.__createBinding||(Object.create?function(e,t,r,o){void 0===o&&(o=r),Object.defineProperty(e,o,{enumerable:!0,get:function(){return t[r]}})}:function(e,t,r,o){void 0===o&&(o=r),e[o]=t[r]}),__setModuleDefault=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),__importStar=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var r in e)"default"!==r&&Object.hasOwnProperty.call(e,r)&&__createBinding(t,e,r);return __setModuleDefault(t,e),t},__importDefault=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(exports,"__esModule",{value:!0}),require("colors");var fs=__importStar(require("fs")),path=__importStar(require("path")),dotenv=__importStar(require("dotenv")),xss=__importStar(require("xss-clean")),express_1=__importDefault(require("express")),express_fileupload_1=__importDefault(require("express-fileupload")),cookie_parser_1=__importDefault(require("cookie-parser")),helmet_1=__importDefault(require("helmet")),hpp_1=__importDefault(require("hpp")),_cors_1=__importDefault(require("./_cors"));fs.existsSync("./.env")&&dotenv.config({path:"./.env"}),fs.existsSync("./config/config.env")&&dotenv.config({path:"./config/config.env"});var mode=process.env.NODE_ENV||"development",RestfServer=function(){function e(e){void 0===e&&(e={}),this._app=express_1.default(),this.options=e,this.setContentMiddlewares(),this.setControllersMiddleware(),this.setSecurityMiddlewares(),this.setAfterMiddlewares()}return e.prototype.use=function(){for(var e,t=[],r=0;r<arguments.length;r++)t[r]=arguments[r];return this._app.use(function(e,t,r){r()}),(e=this._app).use.apply(e,t)},e.prototype.apidocs=function(r,e){void 0===r&&(r="doc"),e=e||r,this._app.get("/"+e,function(e,t){return t.sendFile(process.cwd()+"/"+r+"/index.html")})},e.prototype.public=function(e){void 0===e&&(e="public"),this.use(express_1.default.static(path.join(__dirname,e)))},e.prototype.listen=function(e){void 0===e&&(e=5e3),this.setEndpointNotFoundMiddleware(),this.setGeneralErrorMiddleware(),this.setUnhandledRejection();var t=process.env.PORT||e.toString(),r=("Server running in "+mode+" mode on port "+t+"\n").cyan;this._app.listen(t,function(){return process.stdout.write(r)})},e.prototype.useAfter=function(e){this.afterMiddlewares.push(e)},e.prototype.setAfterMiddlewares=function(){var o=this;this.afterMiddlewares=[],this.use(function(e,t,r){return e.afterMiddlewares=o.afterMiddlewares,r()})},e.prototype.setSecurityMiddlewares=function(){this.use(helmet_1.default()),this.use(xss()),this.use(hpp_1.default()),this.use(_cors_1.default(this.options.allowHosts,this.options.allowHeaders))},e.prototype.setContentMiddlewares=function(){this.use(express_1.default.json()),this.use(cookie_parser_1.default()),this.use(express_fileupload_1.default())},e.prototype.setControllersMiddleware=function(){this.use(function(e,t,r){try{e.AllControllers=require("./.allControllers")}catch(e){console.log("error to require .allControllers\n\n",e)}r()})},e.prototype.setEndpointNotFoundMiddleware=function(){this.use(function(e,t){return t.status(404),t.json({error:"Endpoint not found"})})},e.prototype.setGeneralErrorMiddleware=function(){this.use(function(e,t,r,o){var s=e.message||"Server Error";return r.status(e.statusCode||500),r.json({error:s}),o()})},e.prototype.setUnhandledRejection=function(){process.on("unhandledRejection",function(e){process.stdout.write(("UnhandledRejection Error: "+e.message+"\n").red)})},e}();exports.default=RestfServer;
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+require("colors");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const xss_clean_1 = __importDefault(require("xss-clean"));
+const express_1 = __importDefault(require("express"));
+const express_fileupload_1 = __importDefault(require("express-fileupload"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const helmet_1 = __importDefault(require("helmet"));
+const hpp_1 = __importDefault(require("hpp"));
+const _cors_1 = __importDefault(require("./_cors"));
+if (fs_1.default.existsSync('./.env'))
+    dotenv_1.default.config({ path: './.env' });
+if (fs_1.default.existsSync('./config/config.env'))
+    dotenv_1.default.config({ path: './config/config.env' });
+const mode = process.env.NODE_ENV || 'development';
+class RestfServer {
+    constructor(options = {}) {
+        this._app = express_1.default();
+        this.options = options;
+        this.setContentMiddlewares();
+        this.setControllersMiddleware();
+        this.setSecurityMiddlewares();
+        this.setAfterMiddlewares();
+    }
+    use(...args) {
+        this._app.use((req, _res, next) => {
+            next();
+        });
+        return this._app.use(...args);
+    }
+    apidocs(folder = 'doc', route) {
+        if (!route)
+            route = folder;
+        this._app.get(`/${route}`, (_, res) => res.sendFile(`${process.cwd()}/${folder}/index.html`));
+    }
+    public(folder = 'public') {
+        this.use(express_1.default.static(path_1.default.join(__dirname, folder)));
+    }
+    listen(port = 5000) {
+        this.setEndpointNotFoundMiddleware();
+        this.setGeneralErrorMiddleware();
+        this.setUnhandledRejection();
+        const DEFAULT_PORT = process.env.PORT || port.toString();
+        const message = `Server running in ${mode} mode on port ${DEFAULT_PORT}\n`.cyan;
+        this._app.listen(DEFAULT_PORT, () => process.stdout.write(message));
+    }
+    useAfter(middleware) {
+        this.afterMiddlewares.push(middleware);
+    }
+    setAfterMiddlewares() {
+        this.afterMiddlewares = [];
+        this.use((req, res, next) => {
+            req.afterMiddlewares = this.afterMiddlewares;
+            return next();
+        });
+    }
+    setSecurityMiddlewares() {
+        this.use(helmet_1.default());
+        this.use(xss_clean_1.default());
+        this.use(hpp_1.default());
+        this.use(_cors_1.default(this.options.allowHosts, this.options.allowHeaders));
+    }
+    setContentMiddlewares() {
+        this.use(express_1.default.json());
+        this.use(cookie_parser_1.default());
+        this.use(express_fileupload_1.default());
+    }
+    setControllersMiddleware() {
+        this.use((req, _res, next) => {
+            try {
+                req.AllControllers = require('./.allControllers');
+            }
+            catch (e) {
+                console.log('error to require .allControllers\n\n', e);
+            }
+            next();
+        });
+    }
+    setEndpointNotFoundMiddleware() {
+        this.use((_, res) => {
+            const error = 'Endpoint not found';
+            res.status(404);
+            return res.json({ error });
+        });
+    }
+    setGeneralErrorMiddleware() {
+        this.use((err, req, res, next) => {
+            const error = err.message || 'Server Error';
+            res.status(err.statusCode || 500);
+            res.json({ error });
+            console.log(error);
+            return next();
+        });
+    }
+    setUnhandledRejection() {
+        process.on('unhandledRejection', function (err) {
+            process.stdout.write(`UnhandledRejection Error: ${err.message}\n`.red);
+        });
+    }
+}
+exports.default = RestfServer;

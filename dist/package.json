@@ -7,10 +7,10 @@
   "license": "MIT",
   "scripts": {
     "build": "bin/build.sh",
-    "test": "jest",
-    "deploy:prod": "yarn build && cd dist && npm publish && cd ..",
-    "deploy:rc": "yarn build && cd dist && npm publish --tag rc && cd ..",
-    "postinstall": "node cli build-dev"
+    "deploy:prod": "bin/deploy-prod.sh",
+    "deploy:rc": "bin/deploy-rc.sh",
+    "postinstall": "node cli build-dev",
+    "test": "jest"
   },
   "bin": {
     "restf": "cli.js"
