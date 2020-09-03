@@ -1,12 +1,12 @@
 import { Request, Response } from 'express'
 
 export default class _routeDocsRender {
-  req: Request
+  req: Request	
   res: Response
   lastBase?: string
 
   constructor(req: Request, res: Response) {
-    this.req = req
+    this.req = req	
     this.res = res
   }
 

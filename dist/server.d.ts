@@ -1,11 +1,11 @@
 import 'colors';
-import * as express from 'express';
+import express from 'express';
 export default class RestfServer {
     _app: express.Express;
     afterMiddlewares: any[];
     options: any;
     constructor(options?: any);
-    use(...args: any[]): any;
+    use(...args: any[]): express.Express;
     apidocs(folder?: string, route?: string): void;
     public(folder?: string): void;
     listen(port?: number | string): void;

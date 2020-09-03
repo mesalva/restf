@@ -12,7 +12,7 @@ export default class RestfRouter {
     constructor();
     resources(endpoint: string, Controller: RestfController): this;
     docs(path: string): void;
-    listen(): any;
+    listen(): ExpressRouter;
     private addMethod;
 }
 export {};

@@ -16,12 +16,6 @@ export default class RestfController extends ControllerModels {
 
   protected static serialize = undefined
 
-  constructor(req?: Request | any, res?: Response | any) {
-    super()
-    this.req = req
-    this.res = res
-  }
-
   protected cached(path: string, method: Function) {
     return new Cache().use(path, method)
   }

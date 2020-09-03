@@ -1,7 +1,6 @@
-import * as path from 'path'
-import * as knex from 'knex'
+import path from 'path'
+import knex from 'knex'
 
-//TODO add , "../.." when as lib
 // @ts-ignore
 const fullPath = (p: string) => path.join(__dirname, '../..', p)
 const knexfile = getKnexfile()

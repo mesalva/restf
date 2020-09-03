@@ -43,11 +43,11 @@ export default class RestfRouter {
   }
 
   public docs(path: string) {
-    this.router.get(path, (req: Request, res: Response) => new _routeDocsRender(req, res).render(this.routes))
+    this.router.get(path, (req, res) => new _routeDocsRender(req, res).render(this.routes))
   }
 
   public listen() {
-    this.router.routes = this.routes.map(
+    this.router['routes'] = this.routes.map(
       route => `router.${route.method}('${route.path}', '${route.controller}.${route.type}')`
     )
     return this.router

@@ -8,6 +8,6 @@ export default class _routeController {
     post(path: string, controllerMethod: string): any;
     put(path: string, controllerMethod: string): any;
     delete(path: string, controllerMethod: string): any;
-    listen(): any;
+    listen(): Router;
     static resourcesMethods(Controller: any): any;
 }

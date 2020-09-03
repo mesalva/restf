@@ -10,7 +10,6 @@ export default class RestfController extends ControllerModels {
     permit?: Array<string>;
     currentMethod?: string;
     protected static serialize: any;
-    constructor(req?: Request | any, res?: Response | any);
     protected cached(path: string, method: Function): Promise<any>;
     protected clearCache(path: string): Promise<boolean>;
     run(method: string, ...args: any[]): any;
@@ -23,7 +22,7 @@ export default class RestfController extends ControllerModels {
     protected get headers(): any;
     protected get pathname(): any;
     protected get currentUser(): any;
-    protected tokenToCredentials(token: string): any;
+    protected tokenToCredentials(token: string): string | object;
     protected serialize(...a: any[]): any;
     private sendWithMiddlewares;
     params(...permit: Array<string>): any;

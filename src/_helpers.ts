@@ -15,6 +15,7 @@ export function addMiddleware(controllerName: string, controllerMethod: string, 
     } catch (e) {
       res.status(500)
       res.send('')
+      throw e
     }
   }
 }
