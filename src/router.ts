@@ -6,6 +6,10 @@ import RestfController from './controller'
 
 type MethodAlias = (path: string, controllerMethod: string) => any
 
+interface IRouter extends ExpressRouter {
+  routes: string[]
+}
+
 export default class RestfRouter {
   router: ExpressRouter
   routes: RouteReport[]
