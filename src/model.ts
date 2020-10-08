@@ -1,5 +1,6 @@
 import _database from './_database'
-import { Client } from 'pg'
+
+let client = null
 
 export default class RestfModel {
   _db: any
@@ -8,10 +9,10 @@ export default class RestfModel {
 
   constructor(protected options?: string | any) {}
 
-  protected get db(){
-    if(this._db) return this._db
+  protected get db() {
+    if (this._db) return this._db
     let table: string = typeof this.options === 'string' ? this.options : ''
-    if(!this.options) table = this.route
+    if (!this.options) table = this.route
     this._db = _database(table)
     this._db.constructor.prototype.raw = async (query: string, options: any[] = []) => {
       return _database.raw(query.replace(/\n/g, ' '), options).then(({ rows }) => rows)
@@ -43,9 +44,15 @@ export default class RestfModel {
   }
 
   protected async rawSelect(query: string, params: any[] = []) {
-    const client = new Client({
-      connectionString: process.env.DATABASE_URL + '?ssl=true',
-    })
+    if (!client) {
+      try {
+        const Client = require('pg').Client
+        client = new Client({ connectionString: process.env.DATABASE_URL + '?ssl=true' })
+      } catch (e) {
+        console.log('To run raw queries you must install "pg" lib')
+        throw e
+      }
+    }
     await client.connect()
     if (query.toLowerCase().substr(0, 6) !== 'select') {
       throw new Error('Only selects are allowed')
