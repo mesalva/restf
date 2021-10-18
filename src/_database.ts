@@ -13,7 +13,7 @@ function getKnexfile() {
     return require(fullPath('knexfile'))
   } catch (e) {
     try {
-      return require(fullPath('knexfile'))
+      return require(fullPath('config/knexfile'))
     } catch (e) {
       return require('./_knexfile')
     }

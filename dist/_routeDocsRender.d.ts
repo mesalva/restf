@@ -4,7 +4,7 @@ export default class _routeDocsRender {
     res: Response;
     lastBase?: string;
     constructor(req: Request, res: Response);
-    render(routes: Array<any>): Response<any>;
+    render(routes: Array<any>): Response<any, Record<string, any>>;
     renderRow: (route: any) => string;
 }
 export interface RouteReport {

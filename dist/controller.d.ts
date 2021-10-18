@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import ControllerModels from './.ControllerModels';
 interface ControllerOptions {
     status?: number;
@@ -22,7 +23,7 @@ export default class RestfController extends ControllerModels {
     protected get headers(): any;
     protected get pathname(): any;
     protected get currentUser(): any;
-    protected tokenToCredentials(token: string): string | object;
+    protected tokenToCredentials(token: string): string | jwt.JwtPayload;
     protected serialize(...a: any[]): any;
     private sendWithMiddlewares;
     params(...permit: Array<string>): any;
