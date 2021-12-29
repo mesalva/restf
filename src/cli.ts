@@ -32,7 +32,7 @@ function buildDevCommand() {
 function devCommand() {
   buildDevCommand()
   const spawn = require('child_process').spawn
-  const command = spawn('ts-node', ['src/server.ts'])
+  const command = spawn('ts-node', ['--transpile-only','src/server.ts'])
   command.stdout.setEncoding('utf8')
   command.stdout.on('data', data => process.stdout.write(data))
 }
@@ -82,7 +82,7 @@ function declareModels(folderPath = 'src') {
     .filter(file => file.match(/[A-Z].*\.[tj]s$/))
     .filter(file => !file.match(/\.(d|test|spec)\.[tj]s$/))
     .map(file => file.replace(/\.[tj]s$/, ''))
-    .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api|Search|SearchBase)$/))
+    .filter(file => !file.match(/^(DB|ModelBase|DBBase|Model|Api|Search|SearchBase|\.base\.)$/))
   let content = mountDeclareModelsContent(files, folderPath)
   fs.writeFileSync(`${projectPath}/node_modules/restf/.ControllerModels.js`, content.js)
   fs.writeFileSync(`${projectPath}/node_modules/restf/.ControllerModels.d.ts`, content.declaration)
@@ -95,7 +95,7 @@ function mountDeclareModelsContent(files, folderPath) {
   js += files
     .map(model => {
       return `  Object.defineProperty(ControllerModels.prototype, "${model}", {\n    get: function () {
-      const model = new ${model}()
+      const model = new ${model}(this.headers)
       if(typeof model.authenticate === 'function') model.authenticate(this.currentUser || {})
       return model
     },
