@@ -95,7 +95,7 @@ function mountDeclareModelsContent(files, folderPath) {
   js += files
     .map(model => {
       return `  Object.defineProperty(ControllerModels.prototype, "${model}", {\n    get: function () {
-      const model = new ${model}()
+      const model = new ${model}(this.headers)
       if(typeof model.authenticate === 'function') model.authenticate(this.currentUser || {})
       return model
     },
